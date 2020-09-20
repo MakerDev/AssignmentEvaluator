@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Images\NextButton.png" />
+    <None Remove="Images\PreviousButton.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Prism.Unity" Version="7.2.0.1422" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AssignmentEvaluator.Models\AssignmentEvaluator.Models.csproj" />
+    <ProjectReference Include="..\AssignmentEvaluator.Services\AssignmentEvaluator.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\NextButton.png" />
+    <Resource Include="Images\PreviousButton.png" />
+  </ItemGroup>
+
+</Project>

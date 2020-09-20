@@ -1,0 +1,22 @@
+﻿using Prism.Unity;
+using Prism.Ioc;
+using System.Windows;
+using AssignmentEvaluator.WPF.Views;
+using AssignmentEvaluator.Models;
+
+namespace AssignmentEvaluator.WPF
+{
+
+    public partial class App : PrismApplication
+    {
+        protected override Window CreateShell()
+        {
+            return Container.Resolve<MainWindow>();
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.Register<AssignmentInfo>();
+        }
+    }
+}
