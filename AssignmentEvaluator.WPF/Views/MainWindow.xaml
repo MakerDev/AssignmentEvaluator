@@ -77,11 +77,12 @@
         <Label Content="옵션" FontSize="24" Grid.Column="0" Grid.Row="6" FontStyle="Italic"/>
 
         <!--Row 7-->
-        <Label x:Name="ExistingFilePath" 
-            Content="파일위치"  Grid.Row="7" Grid.Column="1" BorderThickness="1" BorderBrush="Black" 
+        <Label Content="파일위치"  Grid.Row="7" Grid.Column="1" BorderThickness="1" BorderBrush="Black" 
                Width="350" MinHeight="30"
                VerticalAlignment="Center" Margin="0,15,0,15" HorizontalAlignment="Center"/>
-        <Button x:Name="FindExistingFile" Content="파일찾기" MinWidth="100" Height="35" Grid.Column="2" Grid.Row="7" />
+        <Button x:Name="FindExistingFile" 
+                Content="파일찾기" 
+                MinWidth="100" Height="35" Grid.Column="2" Grid.Row="7" />
 
         <!--Row 8-->
         <Button x:Name="ContinueExistingFile" Content="이어하기" MinWidth="100" 

@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using AssignmentEvaluator.WPF.Core;
+using Prism.Regions;
+using System.Windows.Controls;
 
 namespace AssignmentEvaluator.WPF.Views
 {
@@ -7,9 +9,11 @@ namespace AssignmentEvaluator.WPF.Views
     /// </summary>
     public partial class StudentView : UserControl
     {
-        public StudentView()
+        public StudentView(IRegionManager regionManager)
         {
             InitializeComponent();
+
+            regionManager.RegisterViewWithRegion(RegionNames.PROBLEM_LIST_REGION, typeof(ProblemList));
         }
     }
 }

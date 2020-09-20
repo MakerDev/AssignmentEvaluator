@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AssignmentEvaluator.Models\AssignmentEvaluator.Models.csproj" />
     <ProjectReference Include="..\AssignmentEvaluator.Services\AssignmentEvaluator.Services.csproj" />
+    <ProjectReference Include="..\AssignmentEvaluator.WPF.Core\AssignmentEvaluator.WPF.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentEvaluator.WPF", "AssignmentEvaluator.WPF\AssignmentEvaluator.WPF.csproj", "{B1001424-596C-42E2-AE36-18F7C3ED00B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignmentEvaluator.WPF", "AssignmentEvaluator.WPF\AssignmentEvaluator.WPF.csproj", "{B1001424-596C-42E2-AE36-18F7C3ED00B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentEvaluator.Models", "AssignmentEvaluator.Models\AssignmentEvaluator.Models.csproj", "{628AAF48-34BF-41D4-8FFE-418CE677BF35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignmentEvaluator.Models", "AssignmentEvaluator.Models\AssignmentEvaluator.Models.csproj", "{628AAF48-34BF-41D4-8FFE-418CE677BF35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentEvaluator.Services", "AssignmentEvaluator.Services\AssignmentEvaluator.Services.csproj", "{76C60335-9ADB-41A0-BD19-A4D2F49E3BD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignmentEvaluator.Services", "AssignmentEvaluator.Services\AssignmentEvaluator.Services.csproj", "{76C60335-9ADB-41A0-BD19-A4D2F49E3BD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentEvaluator.WPF.Core", "AssignmentEvaluator.WPF.Core\AssignmentEvaluator.WPF.Core.csproj", "{BC659885-B764-4F58-BAB5-F7C2AFC1E3AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{76C60335-9ADB-41A0-BD19-A4D2F49E3BD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76C60335-9ADB-41A0-BD19-A4D2F49E3BD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76C60335-9ADB-41A0-BD19-A4D2F49E3BD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC659885-B764-4F58-BAB5-F7C2AFC1E3AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC659885-B764-4F58-BAB5-F7C2AFC1E3AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC659885-B764-4F58-BAB5-F7C2AFC1E3AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC659885-B764-4F58-BAB5-F7C2AFC1E3AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

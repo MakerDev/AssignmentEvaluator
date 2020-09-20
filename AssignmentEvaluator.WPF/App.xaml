@@ -5,6 +5,8 @@
              xmlns:prism="http://prismlibrary.com/"
              >
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
