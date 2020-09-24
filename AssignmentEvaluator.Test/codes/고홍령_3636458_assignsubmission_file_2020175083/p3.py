@@ -1,0 +1,6 @@
+print('{:>6}'.format('*'))
+print('{:>7}'.format('***'))
+print('{:>8}'.format('*****'))
+print('{:>9}'.format('*******'))
+print('{:>10}'.format('*********'))
+print('{:>11}'.format('***********'))

@@ -1,0 +1,5 @@
+print(format('*','>5'))
+print(format('***','>6'))
+print(format('*****','>7'))
+print(format('*******','>8'))
+print(format('*********','>9'))

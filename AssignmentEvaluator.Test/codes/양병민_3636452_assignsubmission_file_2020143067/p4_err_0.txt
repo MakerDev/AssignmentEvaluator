@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\raki2\Dropbox\12. 대학\2020-2학기\2. 컴퓨팅적 사고와 SW프로그래밍\YCS1001-Auto-Evaluator\labs\Lab1\codes\양병민_3636452_assignsubmission_file_2020143067\p4.py", line 1, in <module>
+    W = int(input('무게:'))
+EOFError: EOF when reading a line

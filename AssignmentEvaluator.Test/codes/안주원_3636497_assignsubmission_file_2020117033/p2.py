@@ -1,0 +1,10 @@
+#problem 4.
+print('65.2 kg => ', end='')
+print(format(1/0.45359*65.2, '.1f'), end='')
+print(' pounds')
+print('175.3 cm => ', end='')
+print(format(175.3/30.48, '.1f'), end='')
+print(' feet')
+print('36.6 C => ', end='')
+print(format(36.6*9/5+32, '.1f'), end='')
+print(' F')

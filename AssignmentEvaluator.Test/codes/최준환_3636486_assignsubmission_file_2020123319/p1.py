@@ -1,0 +1,6 @@
+print(format('*', '^10'))
+print(format('***', '^10'))
+print(format('*****', '^10'))
+print(format('*******', '^10'))
+print(format('*********', '^10'))
+print(format('***********', '^10'))
