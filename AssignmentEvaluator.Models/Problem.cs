@@ -7,8 +7,10 @@ namespace AssignmentEvaluator.Models
     public class Problem
     {
         public int Id { get; set; }
-        public string Feedback { get; set; }
-
+        public bool Submitted { get; set; } = true;
+        public string Feedback { get; set; } = "";
+        public bool HasNameError { get; set; }
+        public string Code { get; set; } = "";
         public int _score = 0;
         public int Score
         {

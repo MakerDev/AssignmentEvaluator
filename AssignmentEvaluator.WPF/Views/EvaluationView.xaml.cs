@@ -3,11 +3,11 @@
 namespace AssignmentEvaluator.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for EvaluationView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class EvaluationView : Window
     {
-        public MainWindow()
+        public EvaluationView()
         {
             InitializeComponent();
         }

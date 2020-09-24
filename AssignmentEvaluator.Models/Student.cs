@@ -13,12 +13,24 @@ namespace AssignmentEvaluator.Models
 
     public class Student
     {
+        public Student(int id, string name, List<Problem> problems, bool hasFilenameError = false, SubmissionState submissionState=SubmissionState.NotSubmitted)
+        {
+            Id = id;
+            Name = name;
+            Problems = problems;
+            HasFilenameError = hasFilenameError;
+            SubmissionState = submissionState;
+        }
+
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool IsEvaluationCompleted { get; set; } = false;
-        public bool HasFilenameError { get; set; } = false;
-        public SubmissionState SubmissionState { get; set; } = SubmissionState.OnDate;
         public List<Problem> Problems { get; set; } = new List<Problem>();
+        public SubmissionState SubmissionState { get; set; } = SubmissionState.NotSubmitted;
+        
+        //압축파일 이름 오류를 말하는 것
+        public bool HasFilenameError { get; set; } = false;
+        public bool IsEvaluationCompleted { get; set; } = false;
+
         public double Score
         {
             get

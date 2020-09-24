@@ -3,6 +3,8 @@ using Prism.Ioc;
 using System.Windows;
 using AssignmentEvaluator.WPF.Views;
 using AssignmentEvaluator.Models;
+using AssignmentEvaluator.WPF.ViewModels;
+using AssignmentEvaluator.Services;
 
 namespace AssignmentEvaluator.WPF
 {
@@ -11,12 +13,16 @@ namespace AssignmentEvaluator.WPF
     {
         protected override Window CreateShell()
         {
-            return Container.Resolve<MainWindow>();
+            return Container.Resolve<ShellView>();
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<AssignmentInfo>();
+            containerRegistry.RegisterSingleton<AssignmentInfo>();
+            containerRegistry.RegisterSingleton<EvaluationManager>();
+            
+            containerRegistry.RegisterForNavigation<StudentView, StudentViewModel>();
+            containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
         }
     }
 }
