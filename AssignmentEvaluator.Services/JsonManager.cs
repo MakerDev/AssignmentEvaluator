@@ -21,7 +21,7 @@ namespace AssignmentEvaluator.Services
             return Task.FromResult(false);
         }
 
-        public Task<T> LoadOrCreateAsync<T>(string fullpath, bool appendExtenstion = true) where T : class, new()
+        public Task<T> LoadAsync<T>(string fullpath, bool appendExtenstion = true) where T : class, new()
         {
             if (appendExtenstion)
                 fullpath += ".json";
@@ -29,7 +29,7 @@ namespace AssignmentEvaluator.Services
             if (!File.Exists(fullpath))
             {
                 File.Create(fullpath);
-                return Task.FromResult<T>(result: new T());
+                return Task.FromResult<T>(null);
             }
 
             string jsonString = File.ReadAllText(fullpath);

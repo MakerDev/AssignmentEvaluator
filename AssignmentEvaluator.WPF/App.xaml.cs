@@ -5,6 +5,8 @@ using AssignmentEvaluator.WPF.Views;
 using AssignmentEvaluator.Models;
 using AssignmentEvaluator.WPF.ViewModels;
 using AssignmentEvaluator.Services;
+using Unity;
+using Unity.Lifetime;
 
 namespace AssignmentEvaluator.WPF
 {
@@ -18,11 +20,16 @@ namespace AssignmentEvaluator.WPF
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<AssignmentInfo>();
             containerRegistry.RegisterSingleton<EvaluationManager>();
-            
-            containerRegistry.RegisterForNavigation<StudentView, StudentViewModel>();
+
+            containerRegistry.GetContainer().RegisterFactory(typeof(AssignmentInfo), "assignmentinfo", (c, t, n) =>
+            {
+                return c.Resolve<EvaluationManager>().AssignmentInfo;
+            });
+
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
+            containerRegistry.RegisterForNavigation<EvaluationView, EvaluationViewModel>();
+            containerRegistry.RegisterForNavigation<StudentView, StudentViewModel>();
         }
     }
 }

@@ -81,9 +81,9 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public DelegateCommand SelectLabFolderCommand { get; set; }
         public DelegateCommand StartEvaluationCommand { get; set; }
 
-        public MainViewModel(AssignmentInfo assignmentInfo, EvaluationManager evaluationManager, IRegionManager regionManager)
+        public MainViewModel(EvaluationManager evaluationManager, IRegionManager regionManager)
         {
-            _assignmentInfo = assignmentInfo;
+            _assignmentInfo = evaluationManager.AssignmentInfo;
             _evaluationManager = evaluationManager;
             _regionManager = regionManager;
 
@@ -126,7 +126,8 @@ namespace AssignmentEvaluator.WPF.ViewModels
         private async void StartEvaluation()
         {
             await _evaluationManager.EvaluateAsync();
-            _regionManager.RequestNavigate(RegionNames.CONTENT_RIGION, "EvaluationView");
+            
+            _regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "EvaluationView");
         }
 
         private void ParseProblemIds()

@@ -1,19 +1,16 @@
-﻿using CsvHelper;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace AssignmentEvaluator.Models
 {
     public class AssignmentInfo
     {
-        public string LabFolderPath { get; set; } = null;
+        public string LabFolderPath { get; set; } = "";
+
         public string ResultFolderPath { get { return LabFolderPath; } }
         public string StudentsCsvFile { get; set; }
-        public string SavefileName { get; set; }
+        public string SavefileName { get; set; } = "";
 
         public List<Student> Students { get; set; } = new List<Student>();
         public Dictionary<string, int> StudentNameIdPairs { get; set; } = new Dictionary<string, int>();
@@ -22,7 +19,8 @@ namespace AssignmentEvaluator.Models
 
         /// <summary>
         /// Key : problem Id
-        /// </summary>
+        /// </summary>        
+        [JsonIgnore]
         public Dictionary<int, EvaluationContext> EvaluationContexts { get; set; }
             = new Dictionary<int, EvaluationContext>();
 
@@ -35,14 +33,14 @@ namespace AssignmentEvaluator.Models
             {
                 if (_savefilePath == null)
                 {
-                    string fileName = SavefileName + "." + "json";
-                    _savefilePath = Path.Combine("채점결과", fileName);
+                    string fileName = SavefileName + ".json";
+                    _savefilePath = Path.Combine(LabFolderPath, fileName);
                 }
 
                 return _savefilePath;
             }
 
             private set { _savefilePath = value; }
-        }        
+        }
     }
 }

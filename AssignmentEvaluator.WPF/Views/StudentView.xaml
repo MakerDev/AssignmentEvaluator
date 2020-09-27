@@ -21,11 +21,12 @@
             <TextBlock Text="{Binding Student.Id }" MinWidth="150" />
 
             <TextBlock Text="채점상태 : "  Margin="30 0 0 0"/>
-            <TextBlock Text="{Binding Student.IsEvaluationCompleted, 
-                Converter={StaticResource BooleanToVisibilityConverter}}" 
+            <TextBlock Text="{Binding Student.IsEvaluationCompleted}" 
                        MinWidth="150" />
+            
             <TextBlock Text="지각여부 : " Margin="30 0 0 0"/>
-            <CheckBox IsChecked="False" />
+            <CheckBox IsChecked="{Binding Student.SubmissionState,
+                Converter={StaticResource SubmissionStateToBooleanConverter}}" />
         </StackPanel>
 
         <Border BorderThickness="1"  BorderBrush="Black"/>
@@ -42,7 +43,6 @@
                     <Button x:Name="SaveAllToCSV" Width="100" Height="40" Content="CSV저장"/>
                 </StackPanel>
             </DockPanel>
-
         </StackPanel>
     </StackPanel>
 </UserControl>

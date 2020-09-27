@@ -9,7 +9,7 @@ namespace AssignmentEvaluator.Models
         public int Id { get; set; }
         public bool Submitted { get; set; } = true;
         public string Feedback { get; set; } = "";
-        public bool HasNameError { get; set; }
+        public bool HasNameError { get; set; } = false;
         public string Code { get; set; } = "";
         public int _score = 0;
         public int Score

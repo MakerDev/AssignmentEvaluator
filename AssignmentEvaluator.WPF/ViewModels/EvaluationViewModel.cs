@@ -1,4 +1,5 @@
 ﻿using AssignmentEvaluator.Models;
+using AssignmentEvaluator.Services;
 using AssignmentEvaluator.WPF.Core;
 using AssignmentEvaluator.WPF.Events;
 using Prism.Commands;
@@ -8,13 +9,14 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.WPF.ViewModels
 {
     public class EvaluationViewModel : BindableBase
     {
         private readonly AssignmentInfo _assignmentInfo;
-        private readonly IEventAggregator _eventAggregator;
         private readonly IRegionManager _regionManager;
 
         public DelegateCommand MoveToNextStudent { get; set; }
@@ -27,57 +29,69 @@ namespace AssignmentEvaluator.WPF.ViewModels
             set
             {
                 _currentStudentIndex = value;
-                Student = Students[_currentStudentIndex];
+
+                RaisePropertyChanged(nameof(Student));
+                RaisePropertyChanged(nameof(CurrentStudentNum));
+
+                MoveToNextStudent.RaiseCanExecuteChanged();
+                MoveToPreviousStudent.RaiseCanExecuteChanged();
             }
         }
 
-        public List<Student> Students { get;  }
+        public int CurrentStudentNum { get { return CurrentStudentIndex + 1; } }
+        public int CompletedStudentNum { get; set; }
 
-        private Student _student;
+        public int StudentCount { get; set; }
+
+        public List<Student> Students { get; private set; }
+
         public Student Student
         {
             get
             {
-                return _student;
-            }
-            set
-            {
-                SetProperty(ref _student, value);
+                return Students[CurrentStudentIndex];
             }
         }
 
-        public EvaluationViewModel(AssignmentInfo assignmentInfo, IEventAggregator eventAggregator, IRegionManager regionManager)
+        public DelegateCommand CheckComplete { get; set; }
+
+        public EvaluationViewModel(EvaluationManager evaluationManager, IRegionManager regionManager)
         {
-            _assignmentInfo = assignmentInfo;
-            _eventAggregator = eventAggregator;
+            _assignmentInfo = evaluationManager.AssignmentInfo;
             _regionManager = regionManager;
 
             Students = _assignmentInfo.Students;
+            StudentCount = Students.Count;
 
             MoveToNextStudent = new DelegateCommand(MoveNext, CanMoveNext);
             MoveToPreviousStudent = new DelegateCommand(MoveBack, CanMoveBack);
+
+            //HACK: 생성자가 완전 종료 되기 전에(아마 View에서 InitializeComponent를 진행하고, View의 생성자 종료직전까지는 네비게이션이 안 되는 듯.)
+            Task.Delay(100)
+                .ConfigureAwait(true)
+                .GetAwaiter().OnCompleted(() => SwitchStudent(Student));                
         }
 
         private bool CanMoveNext()
         {
-            return (_currentStudentIndex + 1) < Students.Count;
+            return (CurrentStudentIndex + 1) < Students.Count;
         }
 
         private void MoveNext()
         {
-            _currentStudentIndex++;
+            CurrentStudentIndex++;
 
             SwitchStudent(Student);
         }
 
         private bool CanMoveBack()
         {
-            return (_currentStudentIndex - 1) >= 0;
+            return (CurrentStudentIndex - 1) >= 0;
         }
 
         private void MoveBack()
         {
-            _currentStudentIndex--;
+            CurrentStudentIndex--;
 
             SwitchStudent(Student);
         }
@@ -87,7 +101,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
             var param = new NavigationParameters();
             param.Add("Student", student);
 
-            _regionManager.RequestNavigate(RegionNames.PROBLEM_LIST_REGION, "StudentView", param);
+            _regionManager.RequestNavigate(RegionNames.STUDENT_REGION, "StudentView", param);
         }
     }
 }

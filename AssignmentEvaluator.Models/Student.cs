@@ -13,19 +13,10 @@ namespace AssignmentEvaluator.Models
 
     public class Student
     {
-        public Student(int id, string name, List<Problem> problems, bool hasFilenameError = false, SubmissionState submissionState=SubmissionState.NotSubmitted)
-        {
-            Id = id;
-            Name = name;
-            Problems = problems;
-            HasFilenameError = hasFilenameError;
-            SubmissionState = submissionState;
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Problem> Problems { get; set; } = new List<Problem>();
-        public SubmissionState SubmissionState { get; set; } = SubmissionState.NotSubmitted;
+        public SubmissionState SubmissionState { get; set; } = SubmissionState.OnDate;
         
         //압축파일 이름 오류를 말하는 것
         public bool HasFilenameError { get; set; } = false;
@@ -35,6 +26,11 @@ namespace AssignmentEvaluator.Models
         {
             get
             {
+                if (Problems.Count == 0)
+                {
+                    return 0;
+                }
+
                 double total = 0;
 
                 foreach (var problem in Problems)
@@ -47,14 +43,13 @@ namespace AssignmentEvaluator.Models
         }
 
         /// <summary>
-        /// Normalize to 2
+        /// Normalize to max of 2
         /// </summary>
-        public double NormalizedScore
+        /// <param name="maxScore"></param>
+        /// <returns></returns>
+        public double NormalizeScore(double maxScore)
         {
-            get
-            {
-                return 3 * Score / (Problems.Count * 3);
-            }
+            return 2 * Score / maxScore;
         }
     }
 }

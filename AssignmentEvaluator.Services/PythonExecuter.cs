@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.Services
 {
@@ -14,10 +15,8 @@ namespace AssignmentEvaluator.Services
         /// Execute Python file
         /// </summary>
         /// <param name="pythonFile"></param>
-        /// <param name="result"></param>
         /// <param name="inputContent"></param>
-        /// <returns>Error messages</returns>
-        public string Execute(FileInfo pythonFile, out string result, string inputContent = null)
+        public async Task<string> ExecuteAsync(FileInfo pythonFile, string inputContent)
         {
             var psi = new ProcessStartInfo
             {
@@ -42,32 +41,41 @@ namespace AssignmentEvaluator.Services
 
             process.ErrorDataReceived += (s, e) =>
             {
-                if (!hadErrors)
-                {
-                    hadErrors = !string.IsNullOrEmpty(e.Data);
-                }
+                hadErrors = !string.IsNullOrEmpty(e.Data);
 
                 errors.Append(e.Data);
             };
 
-            process.Start();
-
-            if (inputContent != null)
+            await Task.Run(() =>
             {
-                process.StandardInput.WriteLine(inputContent);
-                process.StandardInput.Flush();
-            }
+                process.Start();
 
-            if (!process.WaitForExit(TIMEOUT_MILLISEC))
+                if (inputContent != null)
+                {
+                    process.StandardInput.WriteLine(inputContent);
+                    process.StandardInput.Flush();
+                }
+
+                if (!process.WaitForExit(TIMEOUT_MILLISEC))
+                {
+                    process.Kill();
+                }                
+            });
+
+            string result;
+
+            if (hadErrors)
             {
-                process.Kill();
+                result = errors.ToString();
             }
-
-            result = process.StandardOutput.ReadToEnd();
+            else
+            {
+                result = process.StandardOutput.ReadToEnd();
+            }
 
             process.Close();
 
-            return errors.ToString();
+            return result;
         }
     }
 }

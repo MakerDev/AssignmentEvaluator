@@ -2,11 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:AssignmentEvaluator.WPF"
+             xmlns:converters ="clr-namespace:AssignmentEvaluator.WPF.Converters"
              xmlns:prism="http://prismlibrary.com/"
              >
     <Application.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:SubmissionStateToBooleanConverter x:Key="SubmissionStateToBooleanConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

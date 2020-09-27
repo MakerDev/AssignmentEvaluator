@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.Services
 {
@@ -19,56 +20,101 @@ namespace AssignmentEvaluator.Services
             _pythonExecuter = pythonExecuter;
         }
 
-        public List<Student> GenerateStudents()
+        public async Task<Student> GenerateStudentAsync(DirectoryInfo submissionDir)
         {
-            List<Student> students = new List<Student>();
-
-
-
-            return students;
-        }
-
-        /// <summary>
-        /// id는 직접 넣어야함
-        /// </summary>
-        /// <param name="submissionDir"></param>
-        /// <returns></returns>
-        public Student GenerateStudent(DirectoryInfo submissionDir)
-        {
-            // 1. 폴더 이름에서 이름 추출
-            // 2. 파이썬 파일들을 실행시키고 결과 생성 -> 아직 정답 비교 X
             var splitResults = submissionDir.Name.Split('_');
 
             string name = splitResults[0];
-            int id = _assignmentInfo.StudentNameIdPairs[name];            
-            bool hasFilenameError = splitResults.Last() == id.ToString();
+            int id = _assignmentInfo.StudentNameIdPairs[name];
+            bool hasFilenameError = splitResults.Last() != id.ToString();
             SubmissionState submissionState =
                 _assignmentInfo.StudentNameIdPairs.ContainsKey(name)
                 ? SubmissionState.OnDate : SubmissionState.NotSubmitted;
 
-            var problems = new List<Problem>();
 
             var pythonFiles = submissionDir.GetFiles()
-                .Where(f => f.Extension == "py")
-                .ToDictionary(f => f.Name);
+                .Where(f => f.Extension == ".py")
+                .ToList();
 
-            var pythonNames = _assignmentInfo.ProblemIds.Select(x => $"p{x}").ToList();
+            var problems = new List<Problem>();
 
-            var student = new Student(id, name, problems, hasFilenameError, submissionState);
+            foreach (int problemId in _assignmentInfo.ProblemIds)
+            {
+                var pythonFile = pythonFiles.FirstOrDefault(f => f.Name == $"p{problemId}.py");
+                var problem = await GenerateProblemAsync(problemId, pythonFile);
+                problems.Add(problem);
+            }
+
+            var student = new Student
+            {
+                Id = id,
+                Name = name,
+                HasFilenameError = hasFilenameError,
+                SubmissionState = submissionState,
+                IsEvaluationCompleted = false,
+                Problems = problems
+            };
 
             return student;
         }
 
-        private Problem GenerateProblem(int problemId, FileInfo pythonFile)
+        /// <summary>
+        /// Create Problem Object from the given python file. This function returns "Unsubmitted" Problem result 
+        /// in case "pythonFile" parameter is null.
+        /// </summary>
+        /// <param name="problemId"></param>
+        /// <param name="pythonFile"></param>
+        /// <returns></returns>
+        private async Task<Problem> GenerateProblemAsync(int problemId, FileInfo pythonFile)
         {
-            int testCaseCount = _assignmentInfo.EvaluationContexts[problemId].TestCaseInputs.Count;
+            if (pythonFile == null)
+            {
+                return new Problem
+                {
+                    Id = problemId,
+                    Submitted = false,
+                    Code = "",
+                    Feedback = "미제출",
+                    HasNameError = true
+                };
+            }
 
-            Problem problem = new Problem();
+            Problem problem = new Problem
+            {
+                Id = problemId,
+                Submitted = true,
+                Code = File.ReadAllText(pythonFile.FullName),
+                HasNameError = pythonFile.Name != $"p{problemId}.py"
+            };
 
-            problem.Id = problemId;
-            problem.Code = File.ReadAllText(pythonFile.FullName);
+            var context = _assignmentInfo.EvaluationContexts[problemId];
 
+            for (int i = 0; i < context.TestCaseInputs.Count; i++)
+            {
+                string testCaseInput = context.TestCaseInputs[i];
+                var result = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
 
+                //TODO : TestCaseResults들은 미리 빈칸 없애놓기
+                var isPassed = result.Replace(" ", string.Empty) == context.TestCaseResults[i].Replace(" ", string.Empty);
+
+                if (!isPassed)
+                {
+                    problem.Feedback += $"Case{i} 실행결과 불일치 ";
+                }
+
+                //TODO : Consider make this async
+                TestCase testCase = new TestCase
+                {
+                    Id = i,
+                    Result = result,
+                    IsPassed = isPassed,
+                    Comment = isPassed ? "" : "실행결과 불일치",
+                };
+
+                await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"p{problemId}_out_{i}.txt"), result);
+
+                problem.TestCases.Add(testCase);
+            }
 
             return problem;
         }

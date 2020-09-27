@@ -20,24 +20,11 @@ namespace AssignmentEvaluator.WPF.Views
     /// </summary>
     public partial class ShellView : Window
     {
-        private readonly IRegionManager _regionManager;
-        private readonly IContainerExtension _containerExtension;
-
         public ShellView(IRegionManager regionManager, IContainerExtension containerExtension)
         {
             InitializeComponent();
-            _regionManager = regionManager;
-            _containerExtension = containerExtension;
 
-            
-        }
-
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-
-            var dataLoadView = _containerExtension.Resolve<MainView>();
-            _regionManager.AddToRegion(RegionNames.CONTENT_RIGION, dataLoadView);
+            regionManager.RegisterViewWithRegion(RegionNames.CONTENT_REGION, typeof(MainView));
         }
     }
 }
