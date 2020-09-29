@@ -60,23 +60,32 @@ namespace AssignmentEvaluator.Services
 
                 string feedback = "";
 
+                var evaluationContexts = AssignmentInfo.EvaluationContexts;
+
                 foreach (var problem in student.Problems)
                 {
                     contents.Add(problem.Score.ToString());
 
-                    foreach (var testCase in problem.TestCases)
+                    for (int i = 0; i < evaluationContexts[problem.Id].TestCaseInputs.Count; i++)
                     {
-                        contents.Add(testCase.IsPassed.ToString());
+                        if (problem.TestCases.Count == 0)
+                        {
+                            contents.Add("Not Submitted");
+                        }
+                        else
+                        {
+                            contents.Add(problem.TestCases[i].IsPassed.ToString());
+                        }
                     }
 
-                    feedback += $"p{problem.Id}-{problem.Feedback}\n";
+                    feedback += $"p{problem.Id}-{problem.Feedback}  ";
 
                     contents.Add(problem.Feedback);
                 }
 
                 contents.Add(feedback);
 
-                builder.AppendLine(string.Join(',', contents.ToArray(), 0, contents.Count - 1));
+                builder.AppendLine(string.Join(',', contents.ToArray(), 0, contents.Count));
             }
 
             string csvPath = Path.Combine(AssignmentInfo.LabFolderPath, $"{AssignmentInfo.SavefileName}.csv");
@@ -103,12 +112,12 @@ namespace AssignmentEvaluator.Services
                 headers.Add($"p{context.ProblemId}-Feedback");
             }
 
-            headers.Add("Collected-Feedback");            
+            headers.Add("Collected-Feedback");
 
-            return string.Join(',', headers.ToArray(), 0, headers.Count - 1);
+            return string.Join(',', headers.ToArray(), 0, headers.Count);
         }
 
-        public async Task EvaluateAsync()
+        public async Task EvaluateAsync(IProgress<int> progress = null)
         {
             LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
 
@@ -118,7 +127,7 @@ namespace AssignmentEvaluator.Services
 
             if (assignmentInfoFromSavefile == null)
             {
-                await EvaluateInternalAsync();
+                await EvaluateInternalAsync(progress);
                 await SaveAsJsonAsync();
             }
             else
@@ -127,13 +136,14 @@ namespace AssignmentEvaluator.Services
                 //This overrides existing evaluationContext.
                 AssignmentInfo = assignmentInfoFromSavefile;
                 AssignmentInfo.EvaluationContexts = evaluationContext;
+                progress.Report(100);
             }
 
             await ExportCsvAsync();
         }
 
         //TODO : Report progress + Create progress dialog
-        private async Task EvaluateInternalAsync()
+        private async Task EvaluateInternalAsync(IProgress<int> progress = null)
         {
             var studentSumbissionDirs =
                 new DirectoryInfo(Path.Combine(AssignmentInfo.LabFolderPath, "codes"))
@@ -141,21 +151,18 @@ namespace AssignmentEvaluator.Services
                 .ToDictionary(d => d.Name.Split('_')[0]);
 
             var allStudentNames = AssignmentInfo.StudentNameIdPairs.Keys.ToList();
+            var allStudentCount = allStudentNames.Count;
 
-            foreach (var name in allStudentNames)
+            for (int i = 0; i < allStudentNames.Count; i++)
             {
+                string name = allStudentNames[i];
                 var studentSubmission = studentSumbissionDirs.GetValueOrDefault(name);
 
                 Student student;
 
                 if (studentSubmission == null)
                 {
-                    student = new Student
-                    {
-                        Id = AssignmentInfo.StudentNameIdPairs[name],
-                        Name = name,
-                        SubmissionState = SubmissionState.NotSubmitted,
-                    };
+                    student = GetNotSubmittedStudent(name, AssignmentInfo.StudentNameIdPairs[name]);
                 }
                 else
                 {
@@ -163,6 +170,11 @@ namespace AssignmentEvaluator.Services
                 }
 
                 AssignmentInfo.Students.Add(student);
+
+                if (progress != null)
+                {
+                    progress.Report((i + 1) * 100 / allStudentCount);
+                }
             }
 
             if (AssignmentInfo.Options.SortByStudentId)
@@ -172,6 +184,49 @@ namespace AssignmentEvaluator.Services
                     return s1.Id - s2.Id;
                 });
             }
+        }
+
+
+        private List<Problem> _cachedProeblems = null;
+
+        private Student GetNotSubmittedStudent(string name, int id)
+        {
+            if (_cachedProeblems == null)
+            {
+                _cachedProeblems = new List<Problem>();
+
+                foreach (var context in AssignmentInfo.EvaluationContexts.Values)
+                {
+                    Problem problem = new Problem
+                    {
+                        Id = context.ProblemId,
+                        Submitted = false,
+                        Score = 0,
+                        Feedback = "미제출",
+                    };
+
+                    for (int i = 0; i < context.TestCaseInputs.Count; i++)
+                    {
+                        problem.TestCases.Add(new TestCase
+                        {
+                            Id = i,
+                            IsPassed = false,
+                        });
+                    }
+
+                    _cachedProeblems.Add(problem);
+                }
+            }
+
+            Student student = new Student
+            {
+                Name = name,
+                Id = id,
+                SubmissionState = SubmissionState.NotSubmitted,
+                Problems = _cachedProeblems,
+            };
+
+            return student;
         }
 
         private async Task CreateEvaluationContextsAsync()

@@ -12,12 +12,14 @@ namespace AssignmentEvaluator.Services
         private const int TIMEOUT_MILLISEC = 5000;
 
         /// <summary>
-        /// Execute Python file
+        /// Execute Python file with inputContent
         /// </summary>
         /// <param name="pythonFile"></param>
         /// <param name="inputContent"></param>
-        public async Task<string> ExecuteAsync(FileInfo pythonFile, string inputContent)
+        /// <returns>Execution Result</returns>
+        public async Task<string> ExecuteAsync(FileInfo pythonFile, string inputContent = "\n")
         {
+            //TODO : 지금 한 명 당 파이썬 프로세스 하나라 무거운가..? 풀링 사용하기..?
             var psi = new ProcessStartInfo
             {
                 //psi.FileName = @"C:\Program Files\PsychoPy3\python.exe";
@@ -59,7 +61,7 @@ namespace AssignmentEvaluator.Services
                 if (!process.WaitForExit(TIMEOUT_MILLISEC))
                 {
                     process.Kill();
-                }                
+                }
             });
 
             string result;

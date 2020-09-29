@@ -18,6 +18,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         private readonly AssignmentInfo _assignmentInfo;
         private readonly EvaluationManager _evaluationManager;
         private readonly IRegionManager _regionManager;
+        private readonly IDialogService _dialogService;
         private string _studentFilePath;
         public string StudentFilePath
         {
@@ -81,11 +82,12 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public DelegateCommand SelectLabFolderCommand { get; set; }
         public DelegateCommand StartEvaluationCommand { get; set; }
 
-        public MainViewModel(EvaluationManager evaluationManager, IRegionManager regionManager)
+        public MainViewModel(EvaluationManager evaluationManager, IRegionManager regionManager, IDialogService dialogService)
         {
             _assignmentInfo = evaluationManager.AssignmentInfo;
             _evaluationManager = evaluationManager;
             _regionManager = regionManager;
+            _dialogService = dialogService;
 
             SelectLabFolderCommand = new DelegateCommand(SelectLabFolder);
             SelectStudentFile = new DelegateCommand(SelectStudentListFile);
@@ -115,19 +117,36 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
         }
 
+        bool _evaluating = false;
+
         private bool CanStartEvaluation()
         {
             return !(string.IsNullOrEmpty(LabFolderPath)
                 || string.IsNullOrEmpty(ProblemNumbers)
                 || string.IsNullOrEmpty(SavefileName)
-                || string.IsNullOrEmpty(StudentFilePath));
+                || string.IsNullOrEmpty(StudentFilePath)
+                || _evaluating);
         }
 
-        private async void StartEvaluation()
+        private void StartEvaluation()
         {
-            await _evaluationManager.EvaluateAsync();
-            
-            _regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "EvaluationView");
+            _evaluating = true;
+            StartEvaluationCommand.RaiseCanExecuteChanged();
+
+            var p = new DialogParameters();
+            p.Add("EvaluationManager", _evaluationManager);
+
+            _dialogService.ShowDialog("EvaluationDialog", p, result =>
+            {
+                if(result.Result == ButtonResult.OK)
+                {
+                    _regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "EvaluationView");
+                }
+                else
+                {
+                    //TODO : Report program crashed
+                }
+            });
         }
 
         private void ParseProblemIds()

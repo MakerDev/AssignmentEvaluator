@@ -7,6 +7,7 @@ using AssignmentEvaluator.WPF.ViewModels;
 using AssignmentEvaluator.Services;
 using Unity;
 using Unity.Lifetime;
+using AssignmentEvaluator.WPF.Dialogs;
 
 namespace AssignmentEvaluator.WPF
 {
@@ -30,6 +31,8 @@ namespace AssignmentEvaluator.WPF
             containerRegistry.RegisterForNavigation<MainView, MainViewModel>();
             containerRegistry.RegisterForNavigation<EvaluationView, EvaluationViewModel>();
             containerRegistry.RegisterForNavigation<StudentView, StudentViewModel>();
+
+            containerRegistry.RegisterDialog<EvaluationDialog, EvaluationDialogViewModel>();
         }
     }
 }

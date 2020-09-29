@@ -95,7 +95,7 @@ namespace AssignmentEvaluator.Services
                 var result = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
 
                 //TODO : TestCaseResults들은 미리 빈칸 없애놓기
-                var isPassed = result.Replace(" ", string.Empty) == context.TestCaseResults[i].Replace(" ", string.Empty);
+                var isPassed = CheckIfPassed(result, context, i);
 
                 if (!isPassed)
                 {
@@ -117,6 +117,14 @@ namespace AssignmentEvaluator.Services
             }
 
             return problem;
+        }
+
+        private bool CheckIfPassed(string result, EvaluationContext context, int caseNumber)
+        {
+            //TODO : Check if the result contains any banned keyword.
+
+            return result.Replace(" ", string.Empty)
+                == context.TestCaseResults[caseNumber].Replace(" ", string.Empty);
         }
     }
 }
