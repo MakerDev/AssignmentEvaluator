@@ -16,7 +16,7 @@
             Margin="0 15 0 0"
             Text="Evaluating..." 
             FontSize="28" />
-        <ProgressBar Height="25" Width="300" Margin="15" 
+        <ProgressBar Height="20" Width="300" Margin="15"
                      Value="{Binding EvaluationProgress}" />
         <Button Content="Close" Command="{Binding CloseDialogCommand}" 
                 Width="100" Height="30" />

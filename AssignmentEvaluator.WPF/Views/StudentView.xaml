@@ -25,7 +25,7 @@
                        MinWidth="150" />
             
             <TextBlock Text="지각여부 : " Margin="30 0 0 0"/>
-            <CheckBox IsChecked="{Binding Student.SubmissionState,
+            <CheckBox IsChecked="{Binding Student.SubmissionState, Mode=TwoWay,
                 Converter={StaticResource SubmissionStateToBooleanConverter}}" />
         </StackPanel>
 
@@ -38,9 +38,16 @@
 
             <DockPanel LastChildFill="False">
                 <StackPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
-                    <Button x:Name="CompleteEvaluation" Width="100" Height="40" Content="완료" />
-                    <Button x:Name="SaveAllToJson" Width="100" Height="40" Content="JSON저장" Margin="0 15 0 15"/>
-                    <Button x:Name="SaveAllToCSV" Width="100" Height="40" Content="CSV저장"/>
+                    <Button x:Name="CompleteEvaluation" 
+                            Width="100" Height="40" 
+                            Content="완료" />
+                    <Button Command="{Binding SaveAsJsonCommand}" 
+                            Width="100" Height="40" 
+                            Content="JSON저장" 
+                            Margin="0 15 0 15"/>
+                    <Button Command="{Binding ExportCsvCommand}" 
+                            Width="100" Height="40" 
+                            Content="CSV저장"/>
                 </StackPanel>
             </DockPanel>
         </StackPanel>

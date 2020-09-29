@@ -27,10 +27,11 @@ namespace AssignmentEvaluator.WPF.Converters
 
             if (valueToConvert)
             {
-                return SubmissionState.OnDate;
+                return SubmissionState.Late;
             }
 
-            return SubmissionState.Late;
+            //TODO : possible bug - 미제출 학생에서 클릭두번 하면 OnDate로 바뀜
+            return SubmissionState.OnDate;
         }
     }
 }
