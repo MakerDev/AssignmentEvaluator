@@ -39,10 +39,10 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Id, StringFormat=Case{0}-}" FontSize="20" />
                             <TextBlock Text="{Binding IsPassed}" FontSize="20" />
-                            <Button Content="Change State" 
+                            <Button Content="Change State"
                                     Command="{Binding ChangePassedStateCommand}" 
-                                    Width="36" Height="24" Margin="5 0"
-                                    FontSize="12"/>
+                                    Width="80" Height="24" Margin="5 0"
+                                    FontSize="10" />
                             <Border BorderThickness="1" Margin="5 0" BorderBrush="Black" />
                             <TextBox Text="{Binding Comment}" Width="530" FontSize="16"/>
                         </StackPanel>

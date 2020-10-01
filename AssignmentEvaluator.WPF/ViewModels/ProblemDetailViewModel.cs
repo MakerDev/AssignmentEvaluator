@@ -20,10 +20,16 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
             foreach (var testCase in problem.TestCases)
             {
-                testCaseViewModels.Add(new TestCaseViewModel(Context, testCase));
+                testCaseViewModels.Add(new TestCaseViewModel(Context, testCase, OnTestCaseStatusChanged));
             }
 
             TestCaseViewModels = testCaseViewModels;
+        }
+
+        //To update Score
+        private void OnTestCaseStatusChanged()
+        {
+            RaisePropertyChanged(nameof(Problem));
         }
 
         public ObservableCollection<TestCaseViewModel> TestCaseViewModels { get; set; }

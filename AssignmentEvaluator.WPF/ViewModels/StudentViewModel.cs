@@ -73,6 +73,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 await evaluationManager.ExportCsvAsync();
                 ExportingCsv = false;
             }, CanExportCsv);
+
             _evaluationManager = evaluationManager;
         }
 

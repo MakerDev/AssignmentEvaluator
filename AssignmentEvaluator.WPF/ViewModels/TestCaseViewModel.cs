@@ -1,6 +1,7 @@
 ﻿using AssignmentEvaluator.Models;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
 
 namespace AssignmentEvaluator.WPF.ViewModels
 {
@@ -9,12 +10,16 @@ namespace AssignmentEvaluator.WPF.ViewModels
         private readonly EvaluationContext _context;
         private readonly TestCase _testCase;
 
-        public TestCaseViewModel(EvaluationContext context, TestCase testCase)
+        public TestCaseViewModel(EvaluationContext context, TestCase testCase, Action onTestCaseStatusChanged)
         {
             _context = context;
             _testCase = testCase;
 
-            ChangePassedStateCommand = new DelegateCommand(() => IsPassed = !IsPassed);
+            ChangePassedStateCommand = new DelegateCommand(() =>
+            {
+                IsPassed = !IsPassed;
+                onTestCaseStatusChanged();
+            });
         }
 
         public DelegateCommand ChangePassedStateCommand { get; set; }
