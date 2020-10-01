@@ -13,9 +13,9 @@
     
     <StackPanel Width="800" Margin="0 5">
         <StackPanel Orientation="Horizontal" >
-            <TextBlock Text="{Binding Context.ProblemId, StringFormat=P{0}}" Width="50" />
-            <TextBlock Text="{Binding Problem.Score, StringFormat=점수 : {0}/}" />
-            <TextBlock Text="{Binding Context.MaxScore}" />
+            <TextBlock Text="{Binding Context.ProblemId, StringFormat=P{0}}" Width="50" Height="35" />
+            <TextBlock Text="{Binding Problem.Score, StringFormat=점수 : {0}/}" Height="35" />
+            <TextBlock Text="{Binding Context.MaxScore}"  Height="35"/>
         </StackPanel>
 
         <Border BorderBrush="Black" BorderThickness="1" />
@@ -35,7 +35,7 @@
         <ItemsControl FontSize="14" ItemsSource="{Binding TestCaseViewModels}" >
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel >
+                    <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Id, StringFormat=Case{0}-}" FontSize="20" />
                             <TextBlock Text="{Binding IsPassed}" FontSize="20" />

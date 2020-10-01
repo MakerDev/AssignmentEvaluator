@@ -8,8 +8,9 @@
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              Background="White"
+             SizeChanged="OnSizeChanged"
              d:DataContext="{d:DesignInstance Type=vm:StudentViewModel, IsDesignTimeCreatable=False}"             
-             prism:ViewModelLocator.AutoWireViewModel="True" Width="900" Height="850">
+             prism:ViewModelLocator.AutoWireViewModel="True" Width="1000" Height="850">
     <StackPanel>
         <Border BorderThickness="1"  BorderBrush="Black"/>
 
@@ -31,21 +32,20 @@
 
         <Border BorderThickness="1"  BorderBrush="Black"/>
 
-        <StackPanel Orientation="Horizontal" Margin="0 0 0 20" Width="900">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Width="800" >
-                <ItemsControl ItemsSource="{Binding ProblemDetails}" >
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 20" Width="1000">
+            <ScrollViewer x:Name="_scrollViewer" VerticalScrollBarVisibility="Visible" 
+                          Height="600">
+                <ItemsControl ItemsSource="{Binding ProblemDetails}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel>
-                                <local:ProblemDetail />
-                            </StackPanel>
+                            <local:ProblemDetail />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
 
             <DockPanel LastChildFill="False">
-                <StackPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
+                <StackPanel DockPanel.Dock="Bottom" Margin="30 0 0 0">
                     <Button x:Name="CompleteEvaluation"
                             Width="80" Height="40" 
                             Content="완료" />

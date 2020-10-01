@@ -20,7 +20,7 @@ namespace AssignmentEvaluator.WPF.Views
     /// </summary>
     public partial class ShellView : Window
     {
-        public ShellView(IRegionManager regionManager, IContainerExtension containerExtension)
+        public ShellView(IRegionManager regionManager)
         {
             InitializeComponent();
 

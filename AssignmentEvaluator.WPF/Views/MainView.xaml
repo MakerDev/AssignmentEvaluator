@@ -91,17 +91,15 @@
         <!--Row 10-->
         <StackPanel Grid.Row="9" Grid.Column="1" Orientation="Horizontal" 
                     Margin="30 15 0 15">
-            <CheckBox x:Name="SortByStudentId" Margin="0 0 15 0"
+            <CheckBox Margin="0 0 15 0"
                       HorizontalContentAlignment="Center"
-                      Content="학번으로 정렬" IsChecked="True" />
+                      Content="학번으로 정렬" IsChecked="{Binding SortById}" />
             
-            <CheckBox x:Name="CompareAnswers"
-                      HorizontalContentAlignment="Center" Margin="0 0 15 0"
-                      Content="정답검사" IsChecked="True" />
+            <CheckBox HorizontalContentAlignment="Center" Margin="0 0 15 0"
+                      Content="정답검사" IsChecked="{Binding CompareAnswers}" />
             
-            <CheckBox x:Name="GenerateAnswerFiles"
-                      HorizontalContentAlignment="Center"
-                      Content="정답 파일생성" IsChecked="True" />
+            <CheckBox HorizontalContentAlignment="Center"
+                      Content="정답 파일생성" IsChecked="{Binding GenerateAnswerFiles}" />
         </StackPanel>
 
 
