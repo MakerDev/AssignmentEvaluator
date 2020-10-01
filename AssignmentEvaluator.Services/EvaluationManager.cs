@@ -129,6 +129,7 @@ namespace AssignmentEvaluator.Services
             {
                 await EvaluateInternalAsync(progress);
                 await SaveAsJsonAsync();
+                await ExportCsvAsync();
             }
             else
             {
@@ -138,8 +139,6 @@ namespace AssignmentEvaluator.Services
                 AssignmentInfo.EvaluationContexts = evaluationContext;
                 progress.Report(100);
             }
-
-            await ExportCsvAsync();
         }
 
         //TODO : Report progress + Create progress dialog
@@ -201,7 +200,6 @@ namespace AssignmentEvaluator.Services
                     {
                         Id = context.ProblemId,
                         Submitted = false,
-                        Score = 0,
                         Feedback = "미제출",
                     };
 
