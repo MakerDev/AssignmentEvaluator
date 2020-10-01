@@ -68,13 +68,33 @@ namespace AssignmentEvaluator.WPF.ViewModels
         }
 
         #region OPTIONS
-        private bool _sortById;
         public bool SortById
         {
-            get { return _sortById; }
-            set { SetProperty(ref _sortById, value); }
+            get { return _assignmentInfo.Options.SortByStudentId; }
+            set {
+                _assignmentInfo.Options.SortByStudentId = value;
+                RaisePropertyChanged(nameof(SortById));
+            }
         }
 
+        public bool CompareAnswers
+        {
+            get { return _assignmentInfo.Options.CompareAnswers; }
+            set {
+                _assignmentInfo.Options.CompareAnswers = value;
+                RaisePropertyChanged(nameof(CompareAnswers));
+            }
+        }
+
+        public bool GenerateAnswerFiles
+        {
+            get { return _assignmentInfo.Options.GenerateAnswerFiles; }
+            set
+            {
+                _assignmentInfo.Options.GenerateAnswerFiles = value;
+                RaisePropertyChanged(nameof(GenerateAnswerFiles));
+            }
+        }
 
         #endregion
 
