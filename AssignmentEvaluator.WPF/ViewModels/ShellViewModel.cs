@@ -8,7 +8,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
 {
     public class ShellViewModel
     {
-        public ShellViewModel(IRegionManager regionManager)
+        public ShellViewModel()
         {
         }
     }
