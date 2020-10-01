@@ -31,7 +31,6 @@ namespace AssignmentEvaluator.Services
                 _assignmentInfo.StudentNameIdPairs.ContainsKey(name)
                 ? SubmissionState.OnDate : SubmissionState.NotSubmitted;
 
-
             var pythonFiles = submissionDir.GetFiles()
                 .Where(f => f.Extension == ".py")
                 .ToList();
@@ -79,7 +78,7 @@ namespace AssignmentEvaluator.Services
                 };
             }
 
-            Problem problem = new Problem
+            var problem = new Problem
             {
                 Id = problemId,
                 Submitted = true,
@@ -92,25 +91,37 @@ namespace AssignmentEvaluator.Services
             for (int i = 0; i < context.TestCaseInputs.Count; i++)
             {
                 string testCaseInput = context.TestCaseInputs[i];
-                var result = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
+                var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
 
-                var isPassed = CheckIfPassed(result, context, i, out string comment);
+                string comment;
+                bool isPassed;
 
-                if (!isPassed)
+                if (executionResult.HadError)
                 {
-                    problem.Feedback += $"Case{i} 실행결과 불일치 ";
+                    isPassed = false;
+                    comment = "실행 중 오류";
+                    problem.Feedback += $"Case{i} 실행 중 오류";
+                }
+                else
+                {
+                    isPassed = CheckIfPassed(executionResult.Result, context, i, out comment);
+
+                    if (isPassed == false)
+                    {
+                        problem.Feedback += $"Case{i} {comment}";
+                    }
                 }
 
                 //TODO : Consider make this async
-                TestCase testCase = new TestCase
+                var testCase = new TestCase
                 {
                     Id = i,
-                    Result = result,
+                    Result = executionResult.Result,
                     IsPassed = isPassed,
                     Comment = comment,
                 };
 
-                await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"p{problemId}_out_{i}.txt"), result);
+                await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"p{problemId}_out_{i}.txt"), executionResult.Result);
 
                 problem.TestCases.Add(testCase);
             }
@@ -121,11 +132,11 @@ namespace AssignmentEvaluator.Services
         private bool CheckIfPassed(string result, EvaluationContext context, int caseNumber, out string comment)
         {
             comment = "";
-            //TODO : Check if the result contains any banned keyword.
+
             //TODO : Check must-have keywords
             foreach (var bannedKeyword in context.BannedKeywords)
             {
-                if (result.Contains(bannedKeyword))
+                if (!string.IsNullOrWhiteSpace(bannedKeyword) && result.Contains(bannedKeyword))
                 {
                     comment += $"| 금지키워드 {bannedKeyword}포함 |";
 
@@ -133,7 +144,7 @@ namespace AssignmentEvaluator.Services
                 }
             }
 
-            if(result.Replace(" ", string.Empty)
+            if (result.Replace(" ", string.Empty)
                 == context.TestCaseResults[caseNumber].Replace(" ", string.Empty))
             {
                 return true;

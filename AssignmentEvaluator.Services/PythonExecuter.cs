@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.Services
 {
+    public class PythonExecutionResult
+    {
+        public string Result { get; set; } = "";
+        public string Errors { get; set; } = "";
+        public bool HadError { get; set; } = false;
+    }
+
     public class PythonExecuter
     {
         private const int TIMEOUT_MILLISEC = 5000;
@@ -17,7 +24,7 @@ namespace AssignmentEvaluator.Services
         /// <param name="pythonFile"></param>
         /// <param name="inputContent"></param>
         /// <returns>Execution Result</returns>
-        public async Task<string> ExecuteAsync(FileInfo pythonFile, string inputContent = "\n")
+        public async Task<PythonExecutionResult> ExecuteAsync(FileInfo pythonFile, string inputContent = "\n")
         {
             //TODO : 지금 한 명 당 파이썬 프로세스 하나라 무거운가..? 풀링 사용하기..?
             var psi = new ProcessStartInfo
@@ -30,23 +37,14 @@ namespace AssignmentEvaluator.Services
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                RedirectStandardInput = true
+                RedirectStandardInput = true,
+                RedirectStandardError = true,
             };
-
-            var errors = new StringBuilder();
-            bool hadErrors = false;
 
             Process process = new Process
             {
                 StartInfo = psi,
                 EnableRaisingEvents = true
-            };
-
-            process.ErrorDataReceived += (s, e) =>
-            {
-                hadErrors = !string.IsNullOrEmpty(e.Data);
-
-                errors.Append(e.Data);
             };
 
             await Task.Run(() =>
@@ -65,15 +63,22 @@ namespace AssignmentEvaluator.Services
                 }
             });
 
-            string result;
+            string errors = process.StandardError.ReadToEnd();
+            bool hadErrors = !string.IsNullOrWhiteSpace(errors);
+
+            var result = new PythonExecutionResult
+            {
+                HadError = hadErrors
+            };
 
             if (hadErrors)
             {
-                result = errors.ToString();
+                result.Result = errors.ToString();
+                result.Errors = result.Result;
             }
             else
             {
-                result = process.StandardOutput.ReadToEnd();
+                result.Result = process.StandardOutput.ReadToEnd();
             }
 
             process.Close();
