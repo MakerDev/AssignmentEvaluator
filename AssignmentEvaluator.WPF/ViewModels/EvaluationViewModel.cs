@@ -64,7 +64,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
             //HACK: 생성자가 완전 종료 되기 전에(아마 View에서 InitializeComponent를 진행하고, View의 생성자 종료직전까지는 네비게이션이 안 되는 듯.)
             Task.Delay(100)
                 .ConfigureAwait(true)
-                .GetAwaiter().OnCompleted(() => SwitchStudent(Student));                
+                .GetAwaiter().OnCompleted(() => SwitchStudent(Student));
         }
 
         private bool CanMoveNext()

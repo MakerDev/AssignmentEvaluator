@@ -3,10 +3,7 @@ using AssignmentEvaluator.Services;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace AssignmentEvaluator.WPF.ViewModels
 {

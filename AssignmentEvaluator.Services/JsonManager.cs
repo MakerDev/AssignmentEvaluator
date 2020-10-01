@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -8,7 +7,7 @@ namespace AssignmentEvaluator.Services
     public class JsonManager
     {
         public Task<bool> DeleteIfExistsAsync(string fullpath, bool appendExtenstion = true)
-        {           
+        {
             if (appendExtenstion)
                 fullpath += ".json";
 

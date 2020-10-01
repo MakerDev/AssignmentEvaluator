@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace AssignmentEvaluator.Models
 {
@@ -17,7 +15,7 @@ namespace AssignmentEvaluator.Models
         public string Name { get; set; }
         public List<Problem> Problems { get; set; } = new List<Problem>();
         public SubmissionState SubmissionState { get; set; } = SubmissionState.OnDate;
-        
+
         //압축파일 이름 오류를 말하는 것
         public bool HasFilenameError { get; set; } = false;
         public bool IsEvaluationCompleted { get; set; } = false;

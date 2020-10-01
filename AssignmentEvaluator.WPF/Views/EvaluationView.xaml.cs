@@ -1,8 +1,4 @@
-﻿using AssignmentEvaluator.WPF.Core;
-using Prism.Regions;
-using System;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace AssignmentEvaluator.WPF.Views
 {

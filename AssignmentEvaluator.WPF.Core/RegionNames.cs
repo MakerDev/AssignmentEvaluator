@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AssignmentEvaluator.WPF.Core
+﻿namespace AssignmentEvaluator.WPF.Core
 {
     public class RegionNames
     {

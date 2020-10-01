@@ -1,13 +1,12 @@
-﻿using Prism.Unity;
-using Prism.Ioc;
-using System.Windows;
-using AssignmentEvaluator.WPF.Views;
-using AssignmentEvaluator.Models;
-using AssignmentEvaluator.WPF.ViewModels;
+﻿using AssignmentEvaluator.Models;
 using AssignmentEvaluator.Services;
-using Unity;
-using Unity.Lifetime;
 using AssignmentEvaluator.WPF.Dialogs;
+using AssignmentEvaluator.WPF.ViewModels;
+using AssignmentEvaluator.WPF.Views;
+using Prism.Ioc;
+using Prism.Unity;
+using System.Windows;
+using Unity;
 
 namespace AssignmentEvaluator.WPF
 {

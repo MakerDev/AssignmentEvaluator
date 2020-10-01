@@ -5,11 +5,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Input;
 
 namespace AssignmentEvaluator.WPF.ViewModels
 {
@@ -71,7 +67,8 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public bool SortById
         {
             get { return _assignmentInfo.Options.SortByStudentId; }
-            set {
+            set
+            {
                 _assignmentInfo.Options.SortByStudentId = value;
                 RaisePropertyChanged(nameof(SortById));
             }
@@ -80,7 +77,8 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public bool CompareAnswers
         {
             get { return _assignmentInfo.Options.CompareAnswers; }
-            set {
+            set
+            {
                 _assignmentInfo.Options.CompareAnswers = value;
                 RaisePropertyChanged(nameof(CompareAnswers));
             }
@@ -158,7 +156,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
             _dialogService.ShowDialog("EvaluationDialog", p, result =>
             {
-                if(result.Result == ButtonResult.OK)
+                if (result.Result == ButtonResult.OK)
                 {
                     _regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "EvaluationView");
                 }

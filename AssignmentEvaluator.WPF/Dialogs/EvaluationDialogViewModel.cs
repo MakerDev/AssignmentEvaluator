@@ -3,9 +3,6 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace AssignmentEvaluator.WPF.Dialogs
 {
@@ -22,8 +19,9 @@ namespace AssignmentEvaluator.WPF.Dialogs
         public int EvaluationProgress
         {
             get { return _evaluationProgress; }
-            set {
-                SetProperty(ref _evaluationProgress, value); 
+            set
+            {
+                SetProperty(ref _evaluationProgress, value);
             }
         }
 
