@@ -36,7 +36,7 @@ namespace AssignmentEvaluator.Models
                     total += problem.Score;
                 }
 
-                return total / Problems.Count;
+                return total;
             }
         }
 

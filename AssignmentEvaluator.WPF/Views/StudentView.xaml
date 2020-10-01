@@ -8,7 +8,6 @@
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              Background="White"
-             SizeChanged="OnSizeChanged"
              d:DataContext="{d:DesignInstance Type=vm:StudentViewModel, IsDesignTimeCreatable=False}"             
              prism:ViewModelLocator.AutoWireViewModel="True" Width="1000" Height="850">
     <StackPanel>

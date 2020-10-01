@@ -36,6 +36,7 @@ namespace AssignmentEvaluator.Services
             await _jsonManager.SaveAsync(AssignmentInfo, AssignmentInfo.SaveFilePath, false);
         }
 
+        //TODO : Extract this to CsvManager
         public async Task ExportCsvAsync()
         {
             StringBuilder builder = new StringBuilder();
@@ -46,7 +47,7 @@ namespace AssignmentEvaluator.Services
 
             foreach (var context in AssignmentInfo.EvaluationContexts.Values)
             {
-                maxScore += context.TestCaseInputs.Count * 3;
+                maxScore += context.MaxScore;
             }
 
             foreach (var student in AssignmentInfo.Students)
@@ -76,8 +77,11 @@ namespace AssignmentEvaluator.Services
                             contents.Add(problem.TestCases[i].IsPassed.ToString());
                         }
                     }
-
-                    feedback += $"p{problem.Id}-{problem.Feedback}  ";
+                    
+                    if (!string.IsNullOrWhiteSpace(problem.Feedback))
+                    {
+                        feedback += $"p{problem.Id}-{problem.Feedback}  ";
+                    }
 
                     contents.Add(problem.Feedback);
                 }
