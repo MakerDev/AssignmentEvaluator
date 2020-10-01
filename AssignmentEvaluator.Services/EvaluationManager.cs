@@ -251,14 +251,28 @@ namespace AssignmentEvaluator.Services
                     BannedKeywords = (await File.ReadAllTextAsync(pythonFile.FullName)).Split('\n').ToList()
                 };
 
-                for (int j = 0; j < testCaseInputs.Count; j++)
+                if (AssignmentInfo.Options.GenerateAnswerFiles)
                 {
-                    string testCaseInput = testCaseInputs[j];
-                    var result = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
+                    for (int j = 0; j < testCaseInputs.Count; j++)
+                    {
+                        string testCaseInput = testCaseInputs[j];
+                        var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
 
-                    evaluationContext.TestCaseResults.Add(result);
+                        evaluationContext.TestCaseResults.Add(executionResult.Result);
 
-                    await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_out_{j}.txt"), result);
+                        await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"), executionResult.Result);
+                    }
+                }
+                else
+                {
+                    //Read from existing files
+                    for (int j = 0; j < testCaseInputs.Count; j++)
+                    {
+                        string testCaseInput = testCaseInputs[j];
+                        var result = await File.ReadAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"));
+
+                        evaluationContext.TestCaseResults.Add(result);
+                    }
                 }
 
                 AssignmentInfo.EvaluationContexts.Add(AssignmentInfo.ProblemIds[i], evaluationContext);
