@@ -11,12 +11,12 @@ namespace AssignmentEvaluator.Models
         public string Feedback { get; set; } = "";
         public bool HasNameError { get; set; } = false;
         public string Code { get; set; } = "";
-        public int _score = 0;
+
         public int Score
         {
             get
             {
-                int score = _score;
+                int score = 0;
 
                 foreach (var testCase in TestCases)
                 {
@@ -27,11 +27,6 @@ namespace AssignmentEvaluator.Models
                 }
 
                 return score;
-            }
-
-            set
-            {
-                _score = value;
             }
         }
 

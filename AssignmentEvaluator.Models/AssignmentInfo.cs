@@ -24,6 +24,21 @@ namespace AssignmentEvaluator.Models
         public Dictionary<int, EvaluationContext> EvaluationContexts { get; set; }
             = new Dictionary<int, EvaluationContext>();
 
+        public int MaxScore
+        {
+            get
+            {
+                int maxScore = 0;
+
+                foreach (var context in EvaluationContexts.Values)
+                {
+                    maxScore += context.MaxScore;
+                }
+
+                return maxScore;
+            }
+        }
+
         public Options Options { get; set; } = new Options();
 
         private string _savefilePath = null;
