@@ -4,30 +4,58 @@
              xmlns:prism="http://prismlibrary.com/"      
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:AssignmentEvaluator.WPF.ViewModels"
-             prism:ViewModelLocator.AutoWireViewModel="True">
-    <UserControl.Resources>
-        <Style x:Key="TestCaseStyle" >
+             xmlns:customs="clr-namespace:AssignmentEvaluator.WPF.Views.CustomControls" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             FontSize="24"
+             Background="White"
+             d:DataContext="{d:DesignInstance Type=viewmodels:ProblemDetailViewModel}">
+    
+    <StackPanel Width="800" Margin="0 5">
+        <StackPanel Orientation="Horizontal" >
+            <TextBlock Text="{Binding Context.ProblemId, StringFormat=P{0}}" Width="50" />
+            <TextBlock Text="{Binding Problem.Score, StringFormat=점수 : {0}/}" />
+            <TextBlock Text="{Binding Context.MaxScore}" />
+        </StackPanel>
 
-        </Style>
-    </UserControl.Resources>
+        <Border BorderBrush="Black" BorderThickness="1" />
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Feedback" Height="31" FontSize="18"/>
+            <Border BorderThickness="1" Margin="5 0" BorderBrush="Black" />
+            <TextBox 
+                FontSize="18"
+                Height="62" TextWrapping="Wrap" 
+                Text="{Binding Problem.Feedback}" Width="700" />
+        </StackPanel>
 
-    <StackPanel>
-        <TextBlock 
-            Text="{Binding Id, StringFormat=문제{}, FallbackValue=문제3}" 
-            FontSize="28"/>
+        <customs:ResultCompareExpander 
+            Header="정답코드와 비교" 
+            Answer="{Binding Context.AnswerCode}" Result="{Binding Problem.Code}"/>
 
-        <TextBox Text="{Binding Feedback, FallbackValue=피드백, Mode=TwoWay}" 
-                 Width="550" Height="50" 
-                 TextWrapping="Wrap"/>
-        
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding TestCases}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ItemsControl FontSize="14" ItemsSource="{Binding TestCaseViewModels}" >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Id, StringFormat=Case{0}-}" FontSize="20" />
+                            <TextBlock Text="{Binding IsPassed}" FontSize="20" />
+                            <Button Content="Change State" 
+                                    Command="{Binding ChangePassedStateCommand}" 
+                                    Width="36" Height="24" Margin="5 0"
+                                    FontSize="12"/>
+                            <Border BorderThickness="1" Margin="5 0" BorderBrush="Black" />
+                            <TextBox Text="{Binding Comment}" Width="530" FontSize="16"/>
+                        </StackPanel>
+                        <Expander Header="Input" >
+                            <TextBlock Text="{Binding Inputs}" FontSize="12" />
+                        </Expander>
+                        <customs:ResultCompareExpander
+                            Header="결과비교"
+                            Answer="{Binding Answer, Mode=OneWay}" Result="{Binding Result, Mode=OneWay}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </StackPanel>
+
 </UserControl>

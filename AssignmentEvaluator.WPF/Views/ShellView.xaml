@@ -9,9 +9,10 @@
         mc:Ignorable="d"
         prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen"        
+        Width="1000"        
         Title="ShellView">
     <ContentControl 
-        Width="800" Height="480"
+        Width="1000"
         prism:RegionManager.RegionName="{x:Static core:RegionNames.CONTENT_REGION}">
         
     </ContentControl>

@@ -5,6 +5,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace AssignmentEvaluator.WPF.ViewModels
@@ -40,6 +41,20 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
         }
 
+        private ObservableCollection<ProblemDetailViewModel> _problemDetails;
+        private readonly EvaluationManager _evaluationManager;
+
+        public ObservableCollection<ProblemDetailViewModel> ProblemDetails
+        {
+            get { return _problemDetails; }
+            set
+            {
+                SetProperty(ref _problemDetails, value);
+            }
+        }
+
+
+
         public DelegateCommand SaveAsJsonCommand { get; set; }
         public DelegateCommand ExportCsvCommand { get; set; }
 
@@ -58,6 +73,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 await evaluationManager.ExportCsvAsync();
                 ExportingCsv = false;
             }, CanExportCsv);
+            _evaluationManager = evaluationManager;
         }
 
         private bool CanSaveJson()
@@ -83,6 +99,17 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             Student = navigationContext.Parameters["Student"] as Student;
+
+            var problemDetails = new ObservableCollection<ProblemDetailViewModel>();
+
+            foreach (var problem in Student.Problems)
+            {
+                var detailViewModel = new ProblemDetailViewModel(
+                    _evaluationManager.AssignmentInfo.EvaluationContexts[problem.Id], problem);
+                problemDetails.Add(detailViewModel);
+            }
+
+            ProblemDetails = problemDetails;
         }
     }
 }

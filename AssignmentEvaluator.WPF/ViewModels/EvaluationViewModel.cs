@@ -1,15 +1,10 @@
 ﻿using AssignmentEvaluator.Models;
 using AssignmentEvaluator.Services;
 using AssignmentEvaluator.WPF.Core;
-using AssignmentEvaluator.WPF.Events;
 using Prism.Commands;
-using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.WPF.ViewModels

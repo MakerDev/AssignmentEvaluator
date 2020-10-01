@@ -8,7 +8,7 @@
              xmlns:prism="http://prismlibrary.com/"
              mc:Ignorable="d" 
              Background="White"
-             d:DataContext="{d:DesignInstance Type=vm:StudentViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance Type=vm:StudentViewModel, IsDesignTimeCreatable=False}"             
              prism:ViewModelLocator.AutoWireViewModel="True" Width="900" Height="850">
     <StackPanel>
         <Border BorderThickness="1"  BorderBrush="Black"/>
@@ -23,7 +23,7 @@
             <TextBlock Text="채점상태 : "  Margin="30 0 0 0"/>
             <TextBlock Text="{Binding Student.IsEvaluationCompleted}" 
                        MinWidth="150" />
-            
+
             <TextBlock Text="지각여부 : " Margin="30 0 0 0"/>
             <CheckBox IsChecked="{Binding Student.SubmissionState, Mode=TwoWay,
                 Converter={StaticResource SubmissionStateToBooleanConverter}}" />
@@ -31,22 +31,30 @@
 
         <Border BorderThickness="1"  BorderBrush="Black"/>
 
-        <StackPanel Orientation="Horizontal" Margin="0 0 0 20" Height="800">
-            <ContentControl Width="750" MinHeight="150" 
-                            HorizontalAlignment="Center" 
-                            HorizontalContentAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 20" Height="800" Width="900">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Width="800" >
+                <ItemsControl ItemsSource="{Binding ProblemDetails}" >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <local:ProblemDetail />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
 
             <DockPanel LastChildFill="False">
                 <StackPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
-                    <Button x:Name="CompleteEvaluation" 
-                            Width="100" Height="40" 
+                    <Button x:Name="CompleteEvaluation"
+                            Width="80" Height="40" 
                             Content="완료" />
                     <Button Command="{Binding SaveAsJsonCommand}" 
-                            Width="100" Height="40" 
+                            Width="80" Height="40" 
                             Content="JSON저장" 
                             Margin="0 15 0 15"/>
                     <Button Command="{Binding ExportCsvCommand}" 
-                            Width="100" Height="40" 
+                            Width="80" Height="40"
                             Content="CSV저장"/>
                 </StackPanel>
             </DockPanel>
