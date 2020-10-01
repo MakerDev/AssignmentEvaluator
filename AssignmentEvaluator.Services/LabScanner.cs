@@ -94,8 +94,7 @@ namespace AssignmentEvaluator.Services
                 string testCaseInput = context.TestCaseInputs[i];
                 var result = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
 
-                //TODO : TestCaseResults들은 미리 빈칸 없애놓기
-                var isPassed = CheckIfPassed(result, context, i);
+                var isPassed = CheckIfPassed(result, context, i, out string comment);
 
                 if (!isPassed)
                 {
@@ -108,7 +107,7 @@ namespace AssignmentEvaluator.Services
                     Id = i,
                     Result = result,
                     IsPassed = isPassed,
-                    Comment = isPassed ? "" : "실행결과 불일치",
+                    Comment = comment,
                 };
 
                 await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"p{problemId}_out_{i}.txt"), result);
@@ -119,12 +118,32 @@ namespace AssignmentEvaluator.Services
             return problem;
         }
 
-        private bool CheckIfPassed(string result, EvaluationContext context, int caseNumber)
+        private bool CheckIfPassed(string result, EvaluationContext context, int caseNumber, out string comment)
         {
+            comment = "";
             //TODO : Check if the result contains any banned keyword.
+            //TODO : Check must-have keywords
+            foreach (var bannedKeyword in context.BannedKeywords)
+            {
+                if (result.Contains(bannedKeyword))
+                {
+                    comment += $"| 금지키워드 {bannedKeyword}포함 |";
 
-            return result.Replace(" ", string.Empty)
-                == context.TestCaseResults[caseNumber].Replace(" ", string.Empty);
+                    return false;
+                }
+            }
+
+            if(result.Replace(" ", string.Empty)
+                == context.TestCaseResults[caseNumber].Replace(" ", string.Empty))
+            {
+                return true;
+            }
+            else
+            {
+                comment += "실행결과 불일치";
+
+                return false;
+            }
         }
     }
 }
