@@ -141,7 +141,6 @@ namespace AssignmentEvaluator.Services
             }
         }
 
-        //TODO : Report progress + Create progress dialog
         private async Task EvaluateInternalAsync(IProgress<int> progress = null)
         {
             var studentSumbissionDirs =
