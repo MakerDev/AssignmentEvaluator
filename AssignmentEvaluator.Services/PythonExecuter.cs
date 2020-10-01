@@ -23,7 +23,8 @@ namespace AssignmentEvaluator.Services
             var psi = new ProcessStartInfo
             {
                 //psi.FileName = @"C:\Program Files\PsychoPy3\python.exe";
-                FileName = @"C:\Python38\python.exe",
+                //FileName = @"C:\Python38\python.exe",
+                FileName = @"python.exe",
                 Arguments = pythonFile.FullName,
 
                 CreateNoWindow = true,
