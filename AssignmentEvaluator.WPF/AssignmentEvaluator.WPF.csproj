@@ -5,6 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>AssignmentEvaluator</AssemblyName>
+    <ApplicationIcon>KyblyIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
