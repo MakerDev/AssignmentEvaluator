@@ -14,7 +14,6 @@ namespace AssignmentEvaluator.Services
 
             if (File.Exists(fullpath))
             {
-                File.Delete(fullpath);
                 return Task.FromResult(true);
             }
 
