@@ -21,7 +21,7 @@ namespace AssignmentEvaluator.WPF
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<EvaluationManager>();
-
+            containerRegistry.RegisterSingleton<CsvManager>();
             containerRegistry.GetContainer().RegisterFactory(typeof(AssignmentInfo), "assignmentinfo", (c, t, n) =>
             {
                 return c.Resolve<EvaluationManager>().AssignmentInfo;
