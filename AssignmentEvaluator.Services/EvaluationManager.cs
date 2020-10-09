@@ -169,7 +169,7 @@ namespace AssignmentEvaluator.Services
                     ProblemId = AssignmentInfo.ProblemIds[i],
                     TestCaseInputs = testCaseInputs,
                     AnswerCode = await File.ReadAllTextAsync(pythonFile.FullName),
-                    BannedKeywords = (await File.ReadAllTextAsync(pythonFile.FullName)).Split('\n').ToList()
+                    BannedKeywords = (await File.ReadAllTextAsync(bannedKeywordFile.FullName)).Split('\n').ToList()
                 };
 
                 if (AssignmentInfo.Options.GenerateAnswerFiles)
