@@ -36,7 +36,7 @@ namespace AssignmentEvaluator.Models
                     total += problem.Score;
                 }
 
-                return total;
+                return SubmissionState == SubmissionState.Late ? total/2 : total;
             }
         }
 
