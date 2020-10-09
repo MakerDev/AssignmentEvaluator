@@ -13,7 +13,10 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public Student Student
         {
             get { return _student; }
-            set { SetProperty(ref _student, value); }
+            set { 
+                SetProperty(ref _student, value);
+                SetProblemDetails();
+            }
         }
 
         private bool _savingJson;
@@ -51,11 +54,11 @@ namespace AssignmentEvaluator.WPF.ViewModels
         }
 
 
-
+        public DelegateCommand ReevaluateCommand { get; set; }
         public DelegateCommand SaveAsJsonCommand { get; set; }
         public DelegateCommand ExportCsvCommand { get; set; }
 
-        public StudentViewModel(EvaluationManager evaluationManager)
+        public StudentViewModel(EvaluationManager evaluationManager, IRegionManager regionManager)
         {
             SaveAsJsonCommand = new DelegateCommand(async () =>
             {
@@ -70,6 +73,16 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 await evaluationManager.ExportCsvAsync();
                 ExportingCsv = false;
             }, CanExportCsv);
+
+            ReevaluateCommand = new DelegateCommand(async () =>
+            {
+                var student = await evaluationManager.ReevaluateStudent(Student.Name);
+
+                if (student != null)
+                {
+                    Student = student;
+                }
+            });
 
             _evaluationManager = evaluationManager;
         }
@@ -97,7 +110,10 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             Student = navigationContext.Parameters["Student"] as Student;
+        }
 
+        private void SetProblemDetails()
+        {
             var problemDetails = new ObservableCollection<ProblemDetailViewModel>();
 
             foreach (var problem in Student.Problems)

@@ -62,6 +62,29 @@ namespace AssignmentEvaluator.Services
             }
         }
 
+        public async Task<Student> ReevaluateStudent(string name)
+        {
+            var dits = Directory.GetDirectories(Path.Combine(AssignmentInfo.LabFolderPath, "codes"));
+            var studentDir = Directory.GetDirectories(Path.Combine(AssignmentInfo.LabFolderPath, "codes"))
+                                .FirstOrDefault(x => x.Contains(name));
+
+            if (studentDir == null)
+            {
+                return null;
+            }
+
+            var studentIdx = AssignmentInfo.Students.FindIndex(x => x.Name == name);
+
+            if (studentIdx < 0)
+            {
+                return null;
+            }
+
+            AssignmentInfo.Students[studentIdx] = await _labScanner.GenerateStudentAsync(new DirectoryInfo(studentDir));
+
+            return AssignmentInfo.Students[studentIdx];
+        }
+
         private async Task EvaluateInternalAsync(IProgress<int> progress = null)
         {
             var studentSumbissionDirs =
@@ -199,7 +222,5 @@ namespace AssignmentEvaluator.Services
                 AssignmentInfo.EvaluationContexts.Add(AssignmentInfo.ProblemIds[i], evaluationContext);
             }
         }
-
-
     }
 }

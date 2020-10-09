@@ -32,7 +32,9 @@
         <Border BorderThickness="1"  BorderBrush="Black"/>
 
         <StackPanel Orientation="Horizontal" Margin="0 0 0 20" Width="1000">
-            <ScrollViewer x:Name="_scrollViewer" VerticalScrollBarVisibility="Visible" 
+            <ScrollViewer x:Name="_scrollViewer" 
+                          VerticalScrollBarVisibility="Visible"
+                          HorizontalScrollBarVisibility="Auto"
                           Height="600">
                 <ItemsControl ItemsSource="{Binding ProblemDetails}">
                     <ItemsControl.ItemTemplate>
@@ -46,8 +48,12 @@
             <DockPanel LastChildFill="False">
                 <StackPanel DockPanel.Dock="Bottom" Margin="30 0 0 0">
                     <Button x:Name="CompleteEvaluation"
+                            Visibility="Collapsed"
                             Width="80" Height="40" 
                             Content="완료" />
+                    <Button Command="{Binding ReevaluateCommand}"
+                            Width="80" Height="40" 
+                            Content="재채점" />
                     <Button Command="{Binding SaveAsJsonCommand}" 
                             Width="80" Height="40" 
                             Content="JSON저장" 
