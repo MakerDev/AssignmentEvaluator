@@ -110,7 +110,6 @@ namespace AssignmentEvaluator.Services
                     }
                 }
 
-                //TODO : Consider make this async
                 var testCase = new TestCase
                 {
                     Id = i,

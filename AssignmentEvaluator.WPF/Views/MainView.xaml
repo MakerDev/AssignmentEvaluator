@@ -8,10 +8,10 @@
             mc:Ignorable="d"
             d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, 
                 Type=vm:MainViewModel}"
-            Width="800" Height="480"        
+            Width="1200" Height="480"        
              Background="White"
             prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
+    <Grid Width="1000">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>

@@ -14,7 +14,8 @@
 *.userprefs
 
 Test2/**/*
-AssignmentEvaluator.Test/*/**
+AssignmentEvaluator.Test/**/*
+AssignmentEvaluator.Test/
 
 # Build results
 [Dd]ebug/
