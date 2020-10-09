@@ -18,6 +18,12 @@ namespace AssignmentEvaluator.WPF.ViewModels
             ChangePassedStateCommand = new DelegateCommand(() =>
             {
                 IsPassed = !IsPassed;
+
+                if (IsPassed)
+                {
+                    Comment = "";
+                }
+
                 onTestCaseStatusChanged();
             });
         }
