@@ -68,14 +68,11 @@ namespace AssignmentEvaluator.Services
                 HadError = hadErrors
             };
 
+            result.Result = process.StandardOutput.ReadToEnd();
+
             if (hadErrors)
             {
-                result.Result = errors.ToString();
-                result.Errors = result.Result;
-            }
-            else
-            {
-                result.Result = process.StandardOutput.ReadToEnd();
+                result.Errors = errors.ToString();
             }
 
             process.Close();
