@@ -47,9 +47,9 @@
 
             <DockPanel LastChildFill="False">
                 <StackPanel DockPanel.Dock="Bottom" Margin="30 0 0 0">
-                    <Button x:Name="CompleteEvaluation"
-                            Visibility="Collapsed"
-                            Width="80" Height="40" 
+                    <Button Command="{Binding CompleteEvaluationCommand}"
+                            Width="80" Height="40"
+                            Margin="0 0 0 15"
                             Content="완료" />
                     <Button Command="{Binding ReevaluateCommand}"
                             Width="80" Height="40" 

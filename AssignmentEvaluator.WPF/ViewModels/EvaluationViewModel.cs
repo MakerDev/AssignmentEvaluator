@@ -1,10 +1,13 @@
 ﻿using AssignmentEvaluator.Models;
 using AssignmentEvaluator.Services;
 using AssignmentEvaluator.WPF.Core;
+using AssignmentEvaluator.WPF.Events;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.WPF.ViewModels
@@ -50,7 +53,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
         public DelegateCommand CheckComplete { get; set; }
 
-        public EvaluationViewModel(EvaluationManager evaluationManager, IRegionManager regionManager)
+        public EvaluationViewModel(EvaluationManager evaluationManager, IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _assignmentInfo = evaluationManager.AssignmentInfo;
             _regionManager = regionManager;
@@ -60,6 +63,22 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
             MoveToNextStudent = new DelegateCommand(MoveNext, CanMoveNext);
             MoveToPreviousStudent = new DelegateCommand(MoveBack, CanMoveBack);
+
+            CompletedStudentNum = Students.Where(x => x.IsEvaluationCompleted).Count();
+
+            eventAggregator.GetEvent<StudentEvaluationCompletedEvent>().Subscribe((isCompleted) =>
+            {
+                if (isCompleted)
+                {
+                    CompletedStudentNum++;
+                }
+                else
+                {
+                    CompletedStudentNum--;
+                }
+
+                RaisePropertyChanged(nameof(CompletedStudentNum));
+            });
 
             //HACK: 생성자가 완전 종료 되기 전에(아마 View에서 InitializeComponent를 진행하고, View의 생성자 종료직전까지는 네비게이션이 안 되는 듯.)
             Task.Delay(100)

@@ -1,6 +1,8 @@
 ﻿using AssignmentEvaluator.Models;
 using AssignmentEvaluator.Services;
+using AssignmentEvaluator.WPF.Events;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System.Collections.ObjectModel;
@@ -53,12 +55,12 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
         }
 
-
+        public DelegateCommand CompleteEvaluationCommand { get; set; }
         public DelegateCommand ReevaluateCommand { get; set; }
         public DelegateCommand SaveAsJsonCommand { get; set; }
         public DelegateCommand ExportCsvCommand { get; set; }
 
-        public StudentViewModel(EvaluationManager evaluationManager, IRegionManager regionManager)
+        public StudentViewModel(EvaluationManager evaluationManager, IEventAggregator eventAggregator)
         {
             SaveAsJsonCommand = new DelegateCommand(async () =>
             {
@@ -82,6 +84,14 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 {
                     Student = student;
                 }
+            });
+
+            CompleteEvaluationCommand = new DelegateCommand(() =>
+            {
+                Student.IsEvaluationCompleted = !Student.IsEvaluationCompleted;
+                RaisePropertyChanged(nameof(Student));
+
+                eventAggregator.GetEvent<StudentEvaluationCompletedEvent>().Publish(Student.IsEvaluationCompleted);
             });
 
             _evaluationManager = evaluationManager;
