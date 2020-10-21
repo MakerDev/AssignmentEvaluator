@@ -36,7 +36,7 @@ namespace AssignmentEvaluator.Services
                 contents.Add(student.Name);
                 contents.Add(student.Id.ToString());
                 //TODO : Optimize this.
-                contents.Add(student.NormalizeScore(maxScore).ToString());
+                contents.Add(student.NormalizeScore(assignmentInfo.EvaluationContexts.Count).ToString());
 
                 string feedback = "";
 
@@ -44,7 +44,7 @@ namespace AssignmentEvaluator.Services
 
                 foreach (var problem in student.Problems)
                 {
-                    contents.Add(problem.Score.ToString());
+                    contents.Add(problem.NormalizedScore.ToString());
 
                     for (int i = 0; i < evaluationContexts[problem.Id].TestCaseInputs.Count; i++)
                     {

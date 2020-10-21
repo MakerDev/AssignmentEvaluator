@@ -27,6 +27,16 @@ namespace AssignmentEvaluator.WPF.ViewModels
             RaisePropertyChanged(nameof(Problem));
         }
 
+        public double AdditionalScore
+        {
+            get { return Problem.AdditionalScore; }
+            set
+            {
+                Problem.AdditionalScore = value;
+                RaisePropertyChanged(nameof(Problem));
+            }
+        }
+
         public ObservableCollection<TestCaseViewModel> TestCaseViewModels { get; set; }
         public EvaluationContext Context { get; }
         public Problem Problem { get; }

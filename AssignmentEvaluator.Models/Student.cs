@@ -33,7 +33,7 @@ namespace AssignmentEvaluator.Models
 
                 foreach (var problem in Problems)
                 {
-                    total += problem.Score;
+                    total += problem.NormalizedScore;
                 }
 
                 return SubmissionState == SubmissionState.Late ? total/2 : total;
@@ -43,11 +43,11 @@ namespace AssignmentEvaluator.Models
         /// <summary>
         /// Normalize to max of 2
         /// </summary>
-        /// <param name="maxScore"></param>
-        /// <returns></returns>
-        public double NormalizeScore(double maxScore)
+        /// <param name="The number of problems"></param>
+        /// <returns>Normalized score</returns>
+        public double NormalizeScore(int problemCount)
         {
-            return 2 * Score / maxScore;
+            return 2 * Score / (problemCount*3);
         }
     }
 }
