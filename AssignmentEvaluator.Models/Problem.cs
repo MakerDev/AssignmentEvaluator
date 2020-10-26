@@ -36,19 +36,19 @@ namespace AssignmentEvaluator.Models
         {
             get
             {
-                if (TestCases.Count == 0)
+                if (!Submitted || TestCases.Count == 0)
                 {
                     return 0;
                 }
 
-                double normalizedScore =  Score / TestCases.Count + AdditionalScore;
+                double normalizedScore = Score / TestCases.Count;
 
                 if (normalizedScore < 1)
                 {
                     normalizedScore = 1;
                 }
 
-                return normalizedScore;
+                return normalizedScore + AdditionalScore;
             }
         }
 
