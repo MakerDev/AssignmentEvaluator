@@ -28,7 +28,7 @@ namespace AssignmentEvaluator.Services
             {
                 //psi.FileName = @"C:\Program Files\PsychoPy3\python.exe";
                 //FileName = @"C:\Python38\python.exe",
-                FileName = @"python.exe",
+                FileName = @"python64.exe",
                 Arguments = pythonFile.FullName,
 
                 CreateNoWindow = true,
