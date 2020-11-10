@@ -141,8 +141,8 @@ namespace AssignmentEvaluator.Services
                 }
             }
 
-            if (result.Replace(" ", string.Empty)
-                == context.TestCaseResults[caseNumber].Replace(" ", string.Empty))
+            if (result.Replace(" ", string.Empty).ToLower()
+                == context.TestCaseResults[caseNumber].Replace(" ", string.Empty).ToLower())
             {
                 return true;
             }
