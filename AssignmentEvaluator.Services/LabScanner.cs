@@ -76,6 +76,7 @@ namespace AssignmentEvaluator.Services
                 };
             }
 
+            //TODO : Substitute Code content here when supporting evaluator scripting.
             var problem = new Problem
             {
                 Id = problemId,
@@ -88,42 +89,53 @@ namespace AssignmentEvaluator.Services
 
             for (int i = 0; i < context.TestCaseInputs.Count; i++)
             {
-                string testCaseInput = context.TestCaseInputs[i];
-                var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
-
-                string comment;
-                bool isPassed;
-
-                if (executionResult.HadError)
-                {
-                    isPassed = false;
-                    comment = "실행 중 오류";
-                    problem.Feedback += $"Case{i} 실행 중 오류";
-                }
-                else
-                {
-                    isPassed = CheckIfPassed(executionResult.Result, context, i, out comment);
-
-                    if (isPassed == false)
-                    {
-                        problem.Feedback += $"Case{i} {comment}";
-                    }
-                }
-
-                var testCase = new TestCase
-                {
-                    Id = i,
-                    Result = executionResult.Result,
-                    IsPassed = isPassed,
-                    Comment = comment,
-                };
-
-                await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"p{problemId}_out_{i}.txt"), executionResult.Result);
+                var testCase = await EvaluateTestCase(problemId, pythonFile, problem, context, i);
 
                 problem.TestCases.Add(testCase);
             }
 
             return problem;
+        }
+
+        private async Task<TestCase> EvaluateTestCase(int problemId,
+                                                      FileInfo pythonFile,
+                                                      Problem problem,
+                                                      EvaluationContext context,
+                                                      int caseId)
+        {
+            string testCaseInput = context.TestCaseInputs[caseId];
+            var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
+
+            string comment;
+            bool isPassed;
+
+            if (executionResult.HadError)
+            {
+                isPassed = false;
+                comment = "실행 중 오류" + " : " + executionResult.Errors;
+
+                problem.Feedback += $"Case{caseId} 실행 중 오류";
+            }
+            else
+            {
+                isPassed = CheckIfPassed(executionResult.Result, context, caseId, out comment);
+
+                if (isPassed == false)
+                {
+                    problem.Feedback += $"Case{caseId} {comment}";
+                }
+            }
+
+            var testCase = new TestCase
+            {
+                Id = caseId,
+                Result = executionResult.Result,
+                IsPassed = isPassed,
+                Comment = comment,
+            };
+
+            await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"p{problemId}_out_{caseId}.txt"), executionResult.Result);
+            return testCase;
         }
 
         private bool CheckIfPassed(string result, EvaluationContext context, int caseNumber, out string comment)
