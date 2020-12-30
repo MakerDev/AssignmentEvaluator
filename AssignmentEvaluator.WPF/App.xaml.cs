@@ -1,9 +1,11 @@
 ﻿using AssignmentEvaluator.Models;
 using AssignmentEvaluator.Services;
+using AssignmentEvaluator.WPF.Core;
 using AssignmentEvaluator.WPF.Dialogs;
 using AssignmentEvaluator.WPF.ViewModels;
 using AssignmentEvaluator.WPF.Views;
 using Prism.Ioc;
+using Prism.Modularity;
 using Prism.Unity;
 using System.Windows;
 using Unity;
@@ -32,6 +34,11 @@ namespace AssignmentEvaluator.WPF
             containerRegistry.RegisterForNavigation<StudentView, StudentViewModel>();
 
             containerRegistry.RegisterDialog<EvaluationDialog, EvaluationDialogViewModel>();
+        }
+
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+        {
+            moduleCatalog.AddModule<CoreModule>();
         }
     }
 }

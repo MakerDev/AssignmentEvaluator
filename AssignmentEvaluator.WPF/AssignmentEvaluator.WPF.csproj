@@ -12,6 +12,7 @@
   <ItemGroup>
     <None Remove="Images\NextButton.png" />
     <None Remove="Images\PreviousButton.png" />
+    <None Remove="Images\Search.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,7 @@
   <ItemGroup>
     <Resource Include="Images\NextButton.png" />
     <Resource Include="Images\PreviousButton.png" />
+    <Resource Include="Images\Search.png" />
   </ItemGroup>
 
 </Project>
