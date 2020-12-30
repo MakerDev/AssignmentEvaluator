@@ -7,7 +7,6 @@ namespace AssignmentEvaluator.Models
     public class AssignmentInfo
     {
         public string LabFolderPath { get; set; } = "";
-
         public string ResultFolderPath { get { return LabFolderPath; } }
         public string StudentsCsvFile { get; set; }
         public string SavefileName { get; set; } = "";
