@@ -34,7 +34,7 @@
         </StackPanel>
 
         <customs:ResultCompareExpander 
-            Header="정답코드와 비교" 
+            Header="정답코드와 비교"
             Answer="{Binding Context.AnswerCode}" Result="{Binding Problem.Code}"/>
 
         <ItemsControl FontSize="14" ItemsSource="{Binding TestCaseViewModels}" >

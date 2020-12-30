@@ -43,18 +43,23 @@
             <TextBox Text="{Binding SavefileName}"  MinWidth="250" MinHeight="30" />
         </StackPanel>
 
-
+        <Button Content="직전정보로드" 
+                MinWidth="100" 
+                Height="35" 
+                Grid.Column="2" Grid.Row="1"
+                Command="{Binding LoadLastAssignmentInfoCommand}"/>
+        
         <!--Row 2-->
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0 15 0 0">
             <TextBlock Text="문제 번호들" Margin="0,0,30, 0" Width="150"/>
             <TextBox Text="{Binding ProblemNumbers}"  MinWidth="250" MinHeight="30" />
         </StackPanel>
 
-        <Button Content="직전정보로드" 
+        <Button Content="번호 자동 추정" 
                 MinWidth="100" 
                 Height="35" 
-                Grid.Column="2" Grid.Row="1"
-                Command="{Binding LoadLastAssignmentInfoCommand}"/>
+                Grid.Column="2" Grid.Row="2"
+                Command="{Binding ConfigureProblemIdsCommand}"/>
 
         <!--Row 3-->
         <Label x:Name="LabFolderPath" 

@@ -5,7 +5,9 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace AssignmentEvaluator.WPF.ViewModels
@@ -102,6 +104,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public DelegateCommand SelectLabFolderCommand { get; set; }
         public DelegateCommand StartEvaluationCommand { get; set; }
         public DelegateCommand LoadLastAssignmentInfoCommand { get; set; }
+        public DelegateCommand ConfigureProblemIdsCommand { get; set; }
 
         public MainViewModel(EvaluationManager evaluationManager, IRegionManager regionManager, IDialogService dialogService)
         {
@@ -114,6 +117,26 @@ namespace AssignmentEvaluator.WPF.ViewModels
             SelectStudentFile = new DelegateCommand(SelectStudentListFile);
             StartEvaluationCommand = new DelegateCommand(StartEvaluation, CanStartEvaluation);
             LoadLastAssignmentInfoCommand = new DelegateCommand(LoadLastAssignmentInfo);
+            ConfigureProblemIdsCommand = new DelegateCommand(ConfigureProblemIds);
+        }
+
+        private void ConfigureProblemIds()
+        {
+            if (string.IsNullOrEmpty(LabFolderPath))
+            {
+                return;
+            }
+            var answersDirectory = new DirectoryInfo(Path.Combine(LabFolderPath, "answers"));
+            var pythonFiles = answersDirectory.GetFiles().Where(x => x.Extension == ".py").ToList();
+            string problemIds = "";
+
+            foreach (var pythonFile in pythonFiles)
+            {
+                var id = Regex.Match(pythonFile.Name, @"\d+").Value;
+                problemIds += $"{id} ";
+            }
+
+            ProblemNumbers = problemIds;
         }
 
         private async void LoadLastAssignmentInfo()
@@ -179,14 +202,16 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
             _dialogService.ShowDialog("EvaluationDialog", p, result =>
             {
+                _evaluating = false;
+
                 if (result.Result == ButtonResult.OK)
                 {
                     _regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "EvaluationView");
                 }
                 else
                 {
-                    //TODO : DO proper error handling here rather than just throwing an exception
-                    throw new System.Exception("Error occured while evaluating");
+                    //Reset evaluation state
+                    StartEvaluationCommand.RaiseCanExecuteChanged();
                 }
             });
         }
@@ -195,8 +220,15 @@ namespace AssignmentEvaluator.WPF.ViewModels
         {
             var problemIds = ProblemNumbers.Split(' ');
 
+            _assignmentInfo.ProblemIds.Clear();
+
             foreach (var problemId in problemIds)
             {
+                if (string.IsNullOrWhiteSpace(problemId))
+                {
+                    continue;
+                }
+
                 _assignmentInfo.ProblemIds.Add(int.Parse(problemId));
             }
         }

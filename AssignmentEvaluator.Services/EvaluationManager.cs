@@ -52,9 +52,22 @@ namespace AssignmentEvaluator.Services
             await _csvManager.ExportCsvAsync(AssignmentInfo);
         }
 
+        public void ClearEvaluationState()
+        {
+            AssignmentInfo.Students.Clear();
+            AssignmentInfo.EvaluationContexts.Clear();
+            AssignmentInfo.StudentNameIdPairs.Clear();
+        }
+
         public async Task EvaluateAsync(IProgress<int> progress = null)
         {
+            //Cache CSV file and reset CsvFilePath to the cached file path
+            var csvCache = Path.Combine(Directory.GetCurrentDirectory(), "studetns-cached.csv");
+            File.Move(AssignmentInfo.StudentsCsvFile, csvCache);
+            AssignmentInfo.StudentsCsvFile = csvCache;
+
             await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(Directory.GetCurrentDirectory(), "lastEvaluation"));
+
             AssignmentInfo.StudentNameIdPairs = _csvManager.LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
 
             await CreateEvaluationContextsAsync();
