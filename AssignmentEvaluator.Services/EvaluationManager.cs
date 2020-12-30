@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.Services
@@ -17,6 +18,8 @@ namespace AssignmentEvaluator.Services
         private readonly LabScanner _labScanner;
         private readonly JsonManager _jsonManager;
         private readonly CsvManager _csvManager;
+
+        private List<Problem> _cachedProeblems = null;
 
         public AssignmentInfo AssignmentInfo { get; set; } = new AssignmentInfo();
 
@@ -64,7 +67,6 @@ namespace AssignmentEvaluator.Services
 
         public async Task<Student> ReevaluateStudent(string name)
         {
-            var dits = Directory.GetDirectories(Path.Combine(AssignmentInfo.LabFolderPath, "codes"));
             var studentDir = Directory.GetDirectories(Path.Combine(AssignmentInfo.LabFolderPath, "codes"))
                                 .FirstOrDefault(x => x.Contains(name));
 
@@ -85,6 +87,26 @@ namespace AssignmentEvaluator.Services
             return AssignmentInfo.Students[studentIdx];
         }
 
+        private async Task<Student> EvaluateStudentInternalAsync(string name,
+            DirectoryInfo studentSubmission,
+            Action reportProgress)
+        {
+            Student student;
+
+            if (studentSubmission == null)
+            {
+                student = GetNotSubmittedStudent(name, AssignmentInfo.StudentNameIdPairs[name]);
+            }
+            else
+            {
+                student = await _labScanner.GenerateStudentAsync(studentSubmission);
+            }
+
+            reportProgress();
+
+            return student;
+        }
+
         private async Task EvaluateInternalAsync(IProgress<int> progress = null)
         {
             var studentSumbissionDirs =
@@ -95,29 +117,26 @@ namespace AssignmentEvaluator.Services
             var allStudentNames = AssignmentInfo.StudentNameIdPairs.Keys.ToList();
             var allStudentCount = allStudentNames.Count;
 
-            for (int i = 0; i < allStudentNames.Count; i++)
+            List<Task<Student>> studentTasks = new List<Task<Student>>();
+            int doneCount = 0;
+            foreach (var name in allStudentNames)
             {
-                string name = allStudentNames[i];
                 var studentSubmission = studentSumbissionDirs.GetValueOrDefault(name);
-
-                Student student;
-
-                if (studentSubmission == null)
+                var task = EvaluateStudentInternalAsync(name, studentSubmission, ()=>
                 {
-                    student = GetNotSubmittedStudent(name, AssignmentInfo.StudentNameIdPairs[name]);
-                }
-                else
-                {
-                    student = await _labScanner.GenerateStudentAsync(studentSubmission);
-                }
+                    Interlocked.Increment(ref doneCount);
+                    progress.Report(doneCount * 100 / allStudentCount);
+                });
 
-                AssignmentInfo.Students.Add(student);
-
-                if (progress != null)
-                {
-                    progress.Report((i + 1) * 100 / allStudentCount);
-                }
+                studentTasks.Add(task);
             }
+
+            await Task.WhenAll(studentTasks);
+
+            studentTasks.ForEach((t) =>
+            {
+                AssignmentInfo.Students.Add(t.Result);
+            });
 
             if (AssignmentInfo.Options.SortByStudentId)
             {
@@ -127,9 +146,6 @@ namespace AssignmentEvaluator.Services
                 });
             }
         }
-
-
-        private List<Problem> _cachedProeblems = null;
 
         private Student GetNotSubmittedStudent(string name, int id)
         {
@@ -187,39 +203,62 @@ namespace AssignmentEvaluator.Services
                 var bannedKeywordFile = filesInsideAnswerFolder
                     .FirstOrDefault(f => f.Name.Contains(pythonFileNameWithoutExtension + "_banned"));
 
+                var bannedKeywords = new List<string>();
+
+                if (bannedKeywordFile != null)
+                {
+                    bannedKeywords = (await File.ReadAllTextAsync(bannedKeywordFile.FullName)).Split('\n').ToList();
+                }
+
                 EvaluationContext evaluationContext = new EvaluationContext
                 {
                     ProblemId = AssignmentInfo.ProblemIds[i],
                     TestCaseInputs = testCaseInputs,
                     AnswerCode = await File.ReadAllTextAsync(pythonFile.FullName),
-                    BannedKeywords = (await File.ReadAllTextAsync(bannedKeywordFile.FullName)).Split('\n').ToList()
+                    BannedKeywords = bannedKeywords,
                 };
 
                 if (AssignmentInfo.Options.GenerateAnswerFiles)
                 {
-                    for (int j = 0; j < testCaseInputs.Count; j++)
-                    {
-                        string testCaseInput = testCaseInputs[j];
-                        var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
-
-                        evaluationContext.TestCaseResults.Add(executionResult.Result);
-
-                        await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"), executionResult.Result);
-                    }
+                    await GenerateAnswerFiles(pythonFile, pythonFileNameWithoutExtension, testCaseInputs, evaluationContext);
                 }
                 else
                 {
-                    //Read from existing files
-                    for (int j = 0; j < testCaseInputs.Count; j++)
-                    {
-                        string testCaseInput = testCaseInputs[j];
-                        var result = await File.ReadAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"));
-
-                        evaluationContext.TestCaseResults.Add(result);
-                    }
+                    await ReadAnswersFromExistingFiles(pythonFile, pythonFileNameWithoutExtension, testCaseInputs, evaluationContext);
                 }
 
                 AssignmentInfo.EvaluationContexts.Add(AssignmentInfo.ProblemIds[i], evaluationContext);
+            }
+        }
+
+        //Read from existing files
+        private static async Task ReadAnswersFromExistingFiles(FileInfo pythonFile,
+                                                               string pythonFileNameWithoutExtension,
+                                                               List<string> testCaseInputs,
+                                                               EvaluationContext evaluationContext)
+        {
+            for (int j = 0; j < testCaseInputs.Count; j++)
+            {
+                string testCaseInput = testCaseInputs[j];
+                var result = await File.ReadAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"));
+
+                evaluationContext.TestCaseResults.Add(result);
+            }
+        }
+
+        private async Task GenerateAnswerFiles(FileInfo pythonFile,
+                                               string pythonFileNameWithoutExtension,
+                                               List<string> testCaseInputs,
+                                               EvaluationContext evaluationContext)
+        {
+            for (int j = 0; j < testCaseInputs.Count; j++)
+            {
+                string testCaseInput = testCaseInputs[j];
+                var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
+
+                evaluationContext.TestCaseResults.Add(executionResult.Result);
+
+                await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"), executionResult.Result);
             }
         }
     }
