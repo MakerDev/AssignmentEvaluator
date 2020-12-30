@@ -14,7 +14,7 @@ namespace AssignmentEvaluator.Services
 
     public class PythonExecuter
     {
-        private const int TIMEOUT_MILLISEC = 2000;
+        private const int TIMEOUT_MILLISEC = 1000;
 
         /// <summary>
         /// Execute Python file with inputContent
