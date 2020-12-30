@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace AssignmentEvaluator.Services
 
     public class PythonExecuter
     {
-        private const int TIMEOUT_MILLISEC = 5000;
+        private const int TIMEOUT_MILLISEC = 2000;
 
         /// <summary>
         /// Execute Python file with inputContent
@@ -42,6 +43,8 @@ namespace AssignmentEvaluator.Services
                 EnableRaisingEvents = true
             };
 
+            bool infiteLoop = false;
+
             await Task.Run(() =>
             {
                 process.Start();
@@ -55,10 +58,24 @@ namespace AssignmentEvaluator.Services
                 if (!process.WaitForExit(TIMEOUT_MILLISEC))
                 {
                     process.Kill();
+                    infiteLoop = true;
                 }
             });
 
             string errors = process.StandardError.ReadToEnd();
+
+            if (infiteLoop)
+            {
+                if (string.IsNullOrEmpty(errors))
+                {
+                    errors += "무한루프";
+                }
+                else
+                {
+                    errors += "+무한루프";
+                }
+            }
+
             bool hadErrors = !string.IsNullOrWhiteSpace(errors);
 
             var result = new PythonExecutionResult
