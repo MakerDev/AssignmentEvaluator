@@ -26,8 +26,6 @@ namespace AssignmentEvaluator.Services
             //TODO : 지금 한 명 당 파이썬 프로세스 하나라 무거운가..? 풀링 사용하기..?
             var psi = new ProcessStartInfo
             {
-                //psi.FileName = @"C:\Program Files\PsychoPy3\python.exe";
-                //FileName = @"C:\Python38\python.exe",
                 FileName = @"python64.exe",
                 Arguments = pythonFile.FullName,
 
