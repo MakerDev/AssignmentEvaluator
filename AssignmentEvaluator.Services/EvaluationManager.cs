@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.Services
 {
-
     public class EvaluationManager
     {
         private readonly PythonExecuter _pythonExecuter;
@@ -31,6 +30,18 @@ namespace AssignmentEvaluator.Services
             _csvManager = csvManager;
         }
 
+        public async Task<AssignmentInfo> LoadLastAssignmentInfo()
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "lastEvaluation.json");
+
+            if (File.Exists(path) == false)
+            {
+                return null;
+            }
+
+            return await _jsonManager.LoadAsync<AssignmentInfo>(path, false);
+        }
+
         public async Task SaveAsJsonAsync()
         {
             await _jsonManager.SaveAsync(AssignmentInfo, AssignmentInfo.SaveFilePath, false);
@@ -43,6 +54,7 @@ namespace AssignmentEvaluator.Services
 
         public async Task EvaluateAsync(IProgress<int> progress = null)
         {
+            await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(Directory.GetCurrentDirectory(), "lastEvaluation"));
             AssignmentInfo.StudentNameIdPairs = _csvManager.LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
 
             await CreateEvaluationContextsAsync();
@@ -122,7 +134,7 @@ namespace AssignmentEvaluator.Services
             foreach (var name in allStudentNames)
             {
                 var studentSubmission = studentSumbissionDirs.GetValueOrDefault(name);
-                var task = EvaluateStudentInternalAsync(name, studentSubmission, ()=>
+                var task = EvaluateStudentInternalAsync(name, studentSubmission, () =>
                 {
                     Interlocked.Increment(ref doneCount);
                     progress.Report(doneCount * 100 / allStudentCount);

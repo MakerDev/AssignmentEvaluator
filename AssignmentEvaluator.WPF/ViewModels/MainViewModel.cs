@@ -5,6 +5,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace AssignmentEvaluator.WPF.ViewModels
@@ -15,6 +16,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         private readonly EvaluationManager _evaluationManager;
         private readonly IRegionManager _regionManager;
         private readonly IDialogService _dialogService;
+
         private string _studentFilePath;
         public string StudentFilePath
         {
@@ -99,6 +101,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public DelegateCommand SelectStudentFile { get; set; }
         public DelegateCommand SelectLabFolderCommand { get; set; }
         public DelegateCommand StartEvaluationCommand { get; set; }
+        public DelegateCommand LoadLastAssignmentInfoCommand { get; set; }
 
         public MainViewModel(EvaluationManager evaluationManager, IRegionManager regionManager, IDialogService dialogService)
         {
@@ -110,6 +113,26 @@ namespace AssignmentEvaluator.WPF.ViewModels
             SelectLabFolderCommand = new DelegateCommand(SelectLabFolder);
             SelectStudentFile = new DelegateCommand(SelectStudentListFile);
             StartEvaluationCommand = new DelegateCommand(StartEvaluation, CanStartEvaluation);
+            LoadLastAssignmentInfoCommand = new DelegateCommand(LoadLastAssignmentInfo);
+        }
+
+        private async void LoadLastAssignmentInfo()
+        {
+            var info = await _evaluationManager.LoadLastAssignmentInfo();
+
+            if (info == null)
+            {
+                return;
+            }
+
+            LabFolderPath = info.LabFolderPath;
+            SavefileName = info.SavefileName;
+            StudentFilePath = info.StudentsCsvFile;
+            ProblemNumbers = string.Join(' ', info.ProblemIds);
+
+            RaisePropertyChanged(nameof(SortById));
+            RaisePropertyChanged(nameof(CompareAnswers));
+            RaisePropertyChanged(nameof(GenerateAnswerFiles));
         }
 
         private void SelectLabFolder()
@@ -162,7 +185,8 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 }
                 else
                 {
-                    //TODO : Report program crashed
+                    //TODO : DO proper error handling here rather than just throwing an exception
+                    throw new System.Exception("Error occured while evaluating");
                 }
             });
         }

@@ -14,7 +14,7 @@
     <Grid Width="1000">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="500"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -37,7 +37,7 @@
 
         <!--Row 1-->
         <StackPanel Grid.Row="1" Grid.Column="1" 
-                    Orientation="Horizontal" 
+                    Orientation="Horizontal" Width="500"
                     VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Text="세이브 파일 이름" Margin="0,0,30, 0" Width="150"/>
             <TextBox Text="{Binding SavefileName}"  MinWidth="250" MinHeight="30" />
@@ -50,10 +50,16 @@
             <TextBox Text="{Binding ProblemNumbers}"  MinWidth="250" MinHeight="30" />
         </StackPanel>
 
+        <Button Content="직전정보로드" 
+                MinWidth="100" 
+                Height="35" 
+                Grid.Column="2" Grid.Row="1"
+                Command="{Binding LoadLastAssignmentInfoCommand}"/>
+
         <!--Row 3-->
         <Label x:Name="LabFolderPath" 
                Grid.Row="3" Grid.Column="1" 
-               BorderThickness="1" BorderBrush="Black" Width="350" 
+               BorderThickness="1" BorderBrush="Black" Width="450" 
                Content="{Binding LabFolderPath}"
                MinHeight="30"
                VerticalAlignment="Center" 
@@ -64,7 +70,6 @@
                 Height="35" 
                 Grid.Column="2" Grid.Row="3"
                 Command="{Binding SelectLabFolderCommand}"/>
-
 
         <!--Row 4-->
         <Button Command="{Binding StartEvaluationCommand}" 
@@ -79,8 +84,9 @@
         <Label Content="옵션" FontSize="24" Grid.Column="0" Grid.Row="6" FontStyle="Italic"/>
 
         <!--Row 7-->
-        <Label Content="{Binding StudentFilePath, FallbackValue=학생명단.csv 위치}"  Grid.Row="7" Grid.Column="1" BorderThickness="1" BorderBrush="Black" 
-               Width="350" MinHeight="30"
+        <Label Content="{Binding StudentFilePath, 
+            FallbackValue=학생명단.csv 위치}"  Grid.Row="7" Grid.Column="1" BorderThickness="1" BorderBrush="Black" 
+               Width="450" MinHeight="30"
                VerticalAlignment="Center" Margin="0,15,0,15" HorizontalAlignment="Center"/>
         <Button Command="{Binding SelectStudentFile}"
                 Content="파일찾기" 
