@@ -11,5 +11,13 @@ namespace AssignmentEvaluator.WPF.Views
         {
             InitializeComponent();
         }
+
+        private void OnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                _searchButton.Command.Execute(null);
+            }
+        }
     }
 }

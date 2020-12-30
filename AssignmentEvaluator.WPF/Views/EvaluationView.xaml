@@ -50,6 +50,14 @@
                     <TextBlock Text=" / " />
                     <TextBlock Text="{Binding StudentCount}" />
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="바로가기(학번 or 이름) : " />
+                    <TextBox d:Text="신유진" TextAlignment="Right" KeyDown="OnKeyDown"
+                             Width="150" Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button x:Name="_searchButton" Command="{Binding MoveToCommand}" Width="22" Height="22">
+                            <Image Source="/Images/Search.png" />
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </Grid>
         <ContentControl 

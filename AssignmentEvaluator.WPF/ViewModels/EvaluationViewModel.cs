@@ -2,10 +2,12 @@
 using AssignmentEvaluator.Services;
 using AssignmentEvaluator.WPF.Core;
 using AssignmentEvaluator.WPF.Events;
+using Microsoft.VisualBasic;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
     {
         private readonly AssignmentInfo _assignmentInfo;
         private readonly IRegionManager _regionManager;
+        private readonly IDialogService _dialogService;
 
         public DelegateCommand MoveToNextStudent { get; set; }
         public DelegateCommand MoveToPreviousStudent { get; set; }
@@ -33,6 +36,8 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
                 MoveToNextStudent.RaiseCanExecuteChanged();
                 MoveToPreviousStudent.RaiseCanExecuteChanged();
+
+                SwitchStudent(Student);
             }
         }
 
@@ -51,12 +56,21 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
         }
 
-        public DelegateCommand CheckComplete { get; set; }
+        private string _searchString = "" ;
+        public string SearchString
+        {
+            get { return _searchString; }
+            set { SetProperty(ref _searchString, value); }
+        }
 
-        public EvaluationViewModel(EvaluationManager evaluationManager, IRegionManager regionManager, IEventAggregator eventAggregator)
+        public DelegateCommand MoveToCommand { get; set; }
+
+        public EvaluationViewModel(EvaluationManager evaluationManager,
+            IRegionManager regionManager, IEventAggregator eventAggregator, IDialogService dialogService)
         {
             _assignmentInfo = evaluationManager.AssignmentInfo;
             _regionManager = regionManager;
+            _dialogService = dialogService;
 
             Students = _assignmentInfo.Students;
             StudentCount = Students.Count;
@@ -65,6 +79,11 @@ namespace AssignmentEvaluator.WPF.ViewModels
             MoveToPreviousStudent = new DelegateCommand(MoveBack, CanMoveBack);
 
             CompletedStudentNum = Students.Where(x => x.IsEvaluationCompleted).Count();
+
+            MoveToCommand = new DelegateCommand(()=>
+            {
+                MoveToStudent(SearchString);
+            });
 
             eventAggregator.GetEvent<StudentEvaluationCompletedEvent>().Subscribe((isCompleted) =>
             {
@@ -86,6 +105,36 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 .GetAwaiter().OnCompleted(() => SwitchStudent(Student));
         }
 
+        private void MoveToStudent(string idOrName)
+        {
+            var isId = int.TryParse(idOrName, out int id);
+            int newIndex = -1;
+            if (isId)
+            {
+                newIndex = Students.FindIndex(0, StudentCount, (student) =>
+                {
+                    return student.Id == id;
+                });
+            }
+            else
+            {
+                newIndex = Students.FindIndex(0, StudentCount, (student) =>
+                {
+                    return student.Name == idOrName;
+                });
+            }
+
+            if (newIndex == -1)
+            {
+                var p = new DialogParameters();
+                p.Add("Message", $"Couldn't find student {idOrName}");
+                _dialogService.ShowDialog("MessageDisplayDialog", p, null);
+                return;
+            }
+            
+            CurrentStudentIndex = newIndex;
+        }
+
         private bool CanMoveNext()
         {
             return (CurrentStudentIndex + 1) < Students.Count;
@@ -94,8 +143,6 @@ namespace AssignmentEvaluator.WPF.ViewModels
         private void MoveNext()
         {
             CurrentStudentIndex++;
-
-            SwitchStudent(Student);
         }
 
         private bool CanMoveBack()
@@ -106,8 +153,6 @@ namespace AssignmentEvaluator.WPF.ViewModels
         private void MoveBack()
         {
             CurrentStudentIndex--;
-
-            SwitchStudent(Student);
         }
 
         private void SwitchStudent(Student student)
