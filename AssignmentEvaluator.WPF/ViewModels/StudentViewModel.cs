@@ -84,6 +84,9 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 {
                     Student = student;
                 }
+
+                //Reset evaluation state to false again.
+                eventAggregator.GetEvent<StudentEvaluationCompletedEvent>().Publish(false);
             });
 
             CompleteEvaluationCommand = new DelegateCommand(() =>
