@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using AssignmentEvaluator.WPF.Core;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,8 +16,6 @@ namespace AssignmentEvaluator.WPF.Views.CustomControls
         // Using a DependencyProperty as the backing store for IsExpaned.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsExpanedProperty =
             DependencyProperty.Register("IsExpaned", typeof(bool), typeof(ResultCompareExpander), new PropertyMetadata(false));
-
-
 
         public string Header
         {
@@ -51,6 +50,13 @@ namespace AssignmentEvaluator.WPF.Views.CustomControls
         public ResultCompareExpander()
         {
             InitializeComponent();
+
+            _diffViewer.PreviewMouseWheel += OnPreviewMouseWheel;
+        }
+
+        private void OnPreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            ApplicationCommands.Scroll(e.Delta);
         }
     }
 }

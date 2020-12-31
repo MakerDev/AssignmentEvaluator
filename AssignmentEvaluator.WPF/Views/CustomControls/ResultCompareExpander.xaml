@@ -3,24 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:AssignmentEvaluator.WPF.Views.CustomControls"
+             xmlns:local="clr-namespace:AssignmentEvaluator.WPF.Views.CustomControls"             
+             xmlns:diffplex="clr-namespace:DiffPlex.Wpf.Controls;assembly=DiffPlex.Wpf"
              mc:Ignorable="d" 
              x:Name="_resultCompareExpander"
              d:DataContext="{d:DesignInstance Type=local:ResultCompareExpander}"
              d:DesignHeight="450" d:DesignWidth="800">
-    
+
     <Expander Header="{Binding ElementName=_resultCompareExpander, Path=Header}" 
               IsExpanded="{Binding ElementName=_resultCompareExpander, Path=IsExpaned}"
               FontSize="16">
-        <StackPanel Orientation="Horizontal">
-            <TextBlock                     
-                Background="LightGreen" 
-                Width="400" 
-                Text="{Binding ElementName=_resultCompareExpander, Path=Answer}" TextWrapping="Wrap" />
-            <Border BorderThickness="1" Margin="0 0 5 0" BorderBrush="Black" />
-            <TextBlock 
-                TextWrapping="Wrap"
-                Width="400" Text="{Binding ElementName=_resultCompareExpander, Path=Result}"/>
+        <StackPanel Orientation="Horizontal" Width="800">
+            <diffplex:DiffViewer
+                x:Name="_diffViewer"
+                Width="800" MaxHeight="500" 
+                OldTextHeader="Answer" NewTextHeader="Submission" 
+                OldText="{Binding ElementName=_resultCompareExpander, Path=Answer}"
+                NewText="{Binding ElementName=_resultCompareExpander, Path=Result}"
+                />
         </StackPanel>
     </Expander>
 </UserControl>

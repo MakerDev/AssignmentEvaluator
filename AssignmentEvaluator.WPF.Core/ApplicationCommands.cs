@@ -8,5 +8,6 @@ namespace AssignmentEvaluator.WPF.Core
     public class ApplicationCommands
     {
         public static CompositeCommand CloseAllExpanders { get; set; } = new CompositeCommand();
+        public static Action<int> Scroll { get; set; } = null;
     }
 }
