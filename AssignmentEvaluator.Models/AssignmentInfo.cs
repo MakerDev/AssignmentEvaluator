@@ -6,6 +6,22 @@ namespace AssignmentEvaluator.Models
 {
     public class AssignmentInfo
     {
+        [JsonIgnore]
+        public static string CacheFolder
+        {
+            get
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "savefiles");
+                
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                return path;
+            }
+        }
+
         public string LabFolderPath { get; set; } = "";
         public string ResultFolderPath { get { return LabFolderPath; } }
         public string StudentsCsvFile { get; set; }

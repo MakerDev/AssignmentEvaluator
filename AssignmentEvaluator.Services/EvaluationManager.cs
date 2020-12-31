@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.Services
 {
-    public class EvaluationManager
+    public class EvaluationManager : IEvaluationManager
     {
         private readonly PythonExecuter _pythonExecuter;
         private readonly LabScanner _labScanner;
@@ -32,7 +32,7 @@ namespace AssignmentEvaluator.Services
 
         public async Task<AssignmentInfo> LoadLastAssignmentInfo()
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "lastEvaluation.json");
+            var path = Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation.json");
 
             if (File.Exists(path) == false)
             {
@@ -61,12 +61,7 @@ namespace AssignmentEvaluator.Services
 
         public async Task EvaluateAsync(IProgress<int> progress = null)
         {
-            //Cache CSV file and reset CsvFilePath to the cached file path
-            var csvCache = Path.Combine(Directory.GetCurrentDirectory(), "studetns-cached.csv");
-            File.Move(AssignmentInfo.StudentsCsvFile, csvCache);
-            AssignmentInfo.StudentsCsvFile = csvCache;
-
-            await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(Directory.GetCurrentDirectory(), "lastEvaluation"));
+            await CacheInfos();
 
             AssignmentInfo.StudentNameIdPairs = _csvManager.LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
 
@@ -88,6 +83,16 @@ namespace AssignmentEvaluator.Services
                 AssignmentInfo.EvaluationContexts = evaluationContext;
                 progress.Report(100);
             }
+        }
+
+        private async Task CacheInfos()
+        {
+            //Cache CSV file and reset CsvFilePath to the cached file path
+            var csvCache = Path.Combine(AssignmentInfo.CacheFolder, "students-cached.csv");
+            File.Move(AssignmentInfo.StudentsCsvFile, csvCache);
+            AssignmentInfo.StudentsCsvFile = csvCache;
+
+            await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation"));
         }
 
         public async Task<Student> ReevaluateStudent(string name)
