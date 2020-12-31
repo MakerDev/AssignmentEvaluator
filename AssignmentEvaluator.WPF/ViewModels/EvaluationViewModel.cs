@@ -65,7 +65,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
         public DelegateCommand MoveToCommand { get; set; }
 
-        public EvaluationViewModel(EvaluationManager evaluationManager,
+        public EvaluationViewModel(IEvaluationManager evaluationManager,
             IRegionManager regionManager, IEventAggregator eventAggregator, IDialogService dialogService)
         {
             _assignmentInfo = evaluationManager.AssignmentInfo;

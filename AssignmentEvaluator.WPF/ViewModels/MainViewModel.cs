@@ -15,7 +15,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
     public class MainViewModel : BindableBase
     {
         private readonly AssignmentInfo _assignmentInfo;
-        private readonly EvaluationManager _evaluationManager;
+        private readonly IEvaluationManager _evaluationManager;
         private readonly IRegionManager _regionManager;
         private readonly IDialogService _dialogService;
 
@@ -106,7 +106,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public DelegateCommand LoadLastAssignmentInfoCommand { get; set; }
         public DelegateCommand ConfigureProblemIdsCommand { get; set; }
 
-        public MainViewModel(EvaluationManager evaluationManager, IRegionManager regionManager, IDialogService dialogService)
+        public MainViewModel(IEvaluationManager evaluationManager, IRegionManager regionManager, IDialogService dialogService)
         {
             _assignmentInfo = evaluationManager.AssignmentInfo;
             _evaluationManager = evaluationManager;

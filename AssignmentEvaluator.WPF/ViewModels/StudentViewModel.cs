@@ -44,7 +44,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         }
 
         private ObservableCollection<ProblemDetailViewModel> _problemDetails;
-        private readonly EvaluationManager _evaluationManager;
+        private readonly IEvaluationManager _evaluationManager;
 
         public ObservableCollection<ProblemDetailViewModel> ProblemDetails
         {
@@ -60,7 +60,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public DelegateCommand SaveAsJsonCommand { get; set; }
         public DelegateCommand ExportCsvCommand { get; set; }
 
-        public StudentViewModel(EvaluationManager evaluationManager, IEventAggregator eventAggregator)
+        public StudentViewModel(IEvaluationManager evaluationManager, IEventAggregator eventAggregator)
         {
             SaveAsJsonCommand = new DelegateCommand(async () =>
             {

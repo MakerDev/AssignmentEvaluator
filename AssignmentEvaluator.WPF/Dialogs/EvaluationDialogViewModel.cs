@@ -42,7 +42,7 @@ namespace AssignmentEvaluator.WPF.Dialogs
 
         public async void OnDialogOpened(IDialogParameters parameters)
         {
-            var evaluationManager = parameters.GetValue<EvaluationManager>("EvaluationManager");
+            var evaluationManager = parameters.GetValue<IEvaluationManager>("EvaluationManager");
 
             var progress = new Progress<int>(value =>
             {
