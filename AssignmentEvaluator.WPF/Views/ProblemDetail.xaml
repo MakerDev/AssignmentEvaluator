@@ -49,7 +49,8 @@
                                     Width="80" Height="24" Margin="5 0"
                                     FontSize="10" />
                             <Border BorderThickness="1" Margin="5 0" BorderBrush="Black" />
-                            <TextBox Text="{Binding Comment}" Width="530" FontSize="16"/>
+                            <TextBox Text="{Binding Comment}" TextWrapping="Wrap" 
+                                     Width="560" FontSize="16"/>
                         </StackPanel>
                         <Expander Header="Input" >
                             <TextBlock Text="{Binding Inputs}" FontSize="12" />
