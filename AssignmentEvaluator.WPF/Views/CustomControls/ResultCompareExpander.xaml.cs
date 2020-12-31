@@ -1,10 +1,23 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace AssignmentEvaluator.WPF.Views.CustomControls
 {
     public partial class ResultCompareExpander : UserControl
     {
+        public bool IsExpaned
+        {
+            get { return (bool)GetValue(IsExpanedProperty); }
+            set { SetValue(IsExpanedProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsExpaned.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsExpanedProperty =
+            DependencyProperty.Register("IsExpaned", typeof(bool), typeof(ResultCompareExpander), new PropertyMetadata(false));
+
+
+
         public string Header
         {
             get { return (string)GetValue(HeaderProperty); }

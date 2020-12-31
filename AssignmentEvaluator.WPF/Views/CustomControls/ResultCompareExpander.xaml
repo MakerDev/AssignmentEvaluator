@@ -9,11 +9,13 @@
              d:DataContext="{d:DesignInstance Type=local:ResultCompareExpander}"
              d:DesignHeight="450" d:DesignWidth="800">
     
-    <Expander Header="{Binding ElementName=_resultCompareExpander, Path=Header}" FontSize="16">
+    <Expander Header="{Binding ElementName=_resultCompareExpander, Path=Header}" 
+              IsExpanded="{Binding ElementName=_resultCompareExpander, Path=IsExpaned}"
+              FontSize="16">
         <StackPanel Orientation="Horizontal">
             <TextBlock                     
                 Background="LightGreen" 
-                Width="395" 
+                Width="400" 
                 Text="{Binding ElementName=_resultCompareExpander, Path=Answer}" TextWrapping="Wrap" />
             <Border BorderThickness="1" Margin="0 0 5 0" BorderBrush="Black" />
             <TextBlock 

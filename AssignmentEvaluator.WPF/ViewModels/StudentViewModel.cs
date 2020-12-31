@@ -1,5 +1,6 @@
 ﻿using AssignmentEvaluator.Models;
 using AssignmentEvaluator.Services;
+using AssignmentEvaluator.WPF.Core;
 using AssignmentEvaluator.WPF.Events;
 using Prism.Commands;
 using Prism.Events;
@@ -59,6 +60,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public DelegateCommand ReevaluateCommand { get; set; }
         public DelegateCommand SaveAsJsonCommand { get; set; }
         public DelegateCommand ExportCsvCommand { get; set; }
+        public CompositeCommand CloseAllExpandersCommand { get; set; } = ApplicationCommands.CloseAllExpanders;
 
         public StudentViewModel(IEvaluationManager evaluationManager, IEventAggregator eventAggregator)
         {

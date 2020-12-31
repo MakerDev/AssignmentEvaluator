@@ -27,6 +27,10 @@
             <TextBlock Text="지각여부 : " Margin="30 0 0 0"/>
             <CheckBox IsChecked="{Binding Student.SubmissionState, Mode=TwoWay,
                 Converter={StaticResource SubmissionStateToBooleanConverter}}" />
+
+            <Button Margin="150 0 0 0" 
+                    Content="CollapseAll" 
+                    Command="{Binding CloseAllExpandersCommand}" />
         </StackPanel>
 
         <Border BorderThickness="1"  BorderBrush="Black"/>

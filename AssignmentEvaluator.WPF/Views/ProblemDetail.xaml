@@ -34,7 +34,7 @@
         </StackPanel>
 
         <customs:ResultCompareExpander 
-            Header="정답코드와 비교"
+            Header="정답코드와 비교" IsExpaned="{Binding IsResultExpanded, Mode=TwoWay}"
             Answer="{Binding Context.AnswerCode}" Result="{Binding Problem.Code}"/>
 
         <ItemsControl FontSize="14" ItemsSource="{Binding TestCaseViewModels}" >
@@ -52,11 +52,11 @@
                             <TextBox Text="{Binding Comment}" TextWrapping="Wrap" 
                                      Width="560" FontSize="16"/>
                         </StackPanel>
-                        <Expander Header="Input" >
+                        <Expander Header="Input" IsExpanded="{Binding IsInputExpanded, Mode=TwoWay}">
                             <TextBlock Text="{Binding Inputs}" FontSize="12" />
                         </Expander>
                         <customs:ResultCompareExpander
-                            Header="결과비교"
+                            Header="결과비교" IsExpaned="{Binding IsResultExpanded, Mode=TwoWay}"
                             Answer="{Binding Answer, Mode=OneWay}" Result="{Binding Result, Mode=OneWay}" />
                     </StackPanel>
                 </DataTemplate>

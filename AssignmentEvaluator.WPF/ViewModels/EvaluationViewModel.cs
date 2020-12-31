@@ -156,7 +156,10 @@ namespace AssignmentEvaluator.WPF.ViewModels
         }
 
         private void SwitchStudent(Student student)
-        {
+        {            
+            //INFO : Move this if there is a more proper place.
+            ApplicationCommands.CloseAllExpanders.RegisteredCommands.Clear();
+
             var param = new NavigationParameters();
             param.Add("Student", student);
 
