@@ -11,12 +11,11 @@
     <StackPanel 
         Width="350" Height="200">
         <TextBlock 
-            Margin="30 10"
+            Margin="0 10"
             d:Text="This is Message"
             HorizontalAlignment="Center"          
             TextWrapping="Wrap" TextAlignment="Center"
-            Text="{Binding Message}" FontSize="28" Height="122" Width="344"  />
-
+            Text="{Binding Message}" FontSize="22" Height="120" Width="345"  />
 
         <StackPanel 
             Orientation="Horizontal"
