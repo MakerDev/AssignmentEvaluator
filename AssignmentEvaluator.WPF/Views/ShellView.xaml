@@ -5,15 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:core="clr-namespace:AssignmentEvaluator.WPF.Core;assembly=AssignmentEvaluator.WPF.Core"
-        xmlns:local="clr-namespace:AssignmentEvaluator.WPF.Views"
+        xmlns:local="clr-namespace:AssignmentEvaluator.WPF.Views" 
+        xmlns:viewmodels="clr-namespace:AssignmentEvaluator.WPF.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
         mc:Ignorable="d"
         prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen"        
-        Width="1400" Height="800"
+        Width="{Binding WindowWidth, FallbackValue=1150, Mode=TwoWay}" 
+        Height="{Binding WindowHeight, FallbackValue=550, Mode=TwoWay}"
         Title="AutoEvaluator">
-    <ContentControl 
-        Width="1200"
-        prism:RegionManager.RegionName="{x:Static core:RegionNames.CONTENT_REGION}">
-        
-    </ContentControl>
+    <Viewbox Stretch="None">
+        <ContentControl 
+            Width="1200"
+            prism:RegionManager.RegionName="{x:Static core:RegionNames.CONTENT_REGION}">
+        </ContentControl>
+    </Viewbox>
 </Window>

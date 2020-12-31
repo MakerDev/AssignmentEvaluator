@@ -1,4 +1,5 @@
 ﻿using AssignmentEvaluator.Models;
+using AssignmentEvaluator.Services.Exceptions;
 using CsvHelper;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,8 @@ namespace AssignmentEvaluator.Services
 
         public async Task EvaluateAsync(IProgress<int> progress = null)
         {
+            ClearEvaluationState();
+
             await CacheInfos();
 
             AssignmentInfo.StudentNameIdPairs = _csvManager.LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
@@ -83,16 +86,6 @@ namespace AssignmentEvaluator.Services
                 AssignmentInfo.EvaluationContexts = evaluationContext;
                 progress.Report(100);
             }
-        }
-
-        private async Task CacheInfos()
-        {
-            //Cache CSV file and reset CsvFilePath to the cached file path
-            var csvCache = Path.Combine(AssignmentInfo.CacheFolder, "students-cached.csv");
-            File.Move(AssignmentInfo.StudentsCsvFile, csvCache);
-            AssignmentInfo.StudentsCsvFile = csvCache;
-
-            await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation"));
         }
 
         public async Task<Student> ReevaluateStudent(string name)
@@ -135,6 +128,16 @@ namespace AssignmentEvaluator.Services
             reportProgress();
 
             return student;
+        }
+
+        private async Task CacheInfos()
+        {
+            //Cache CSV file and reset CsvFilePath to the cached file path
+            var csvCache = Path.Combine(AssignmentInfo.CacheFolder, "students-cached.csv");
+            File.Move(AssignmentInfo.StudentsCsvFile, csvCache);
+            AssignmentInfo.StudentsCsvFile = csvCache;
+
+            await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation"));
         }
 
         private async Task EvaluateInternalAsync(IProgress<int> progress = null)
@@ -269,8 +272,15 @@ namespace AssignmentEvaluator.Services
         {
             for (int j = 0; j < testCaseInputs.Count; j++)
             {
-                string testCaseInput = testCaseInputs[j];
-                var result = await File.ReadAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"));
+                var filename = $"{pythonFileNameWithoutExtension}_ans_{j}.txt";
+                var path = Path.Combine(pythonFile.DirectoryName, filename);
+
+                if (File.Exists(path) == false)
+                {
+                    throw new NoAnswerFileFoundException($"Answer file {filename} is not found.");
+                }
+
+                var result = await File.ReadAllTextAsync(path);
 
                 evaluationContext.TestCaseResults.Add(result);
             }
@@ -288,7 +298,8 @@ namespace AssignmentEvaluator.Services
 
                 evaluationContext.TestCaseResults.Add(executionResult.Result);
 
-                await File.WriteAllTextAsync(Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt"), executionResult.Result);
+                var filePath = Path.Combine(pythonFile.DirectoryName, $"{pythonFileNameWithoutExtension}_ans_{j}.txt");
+                await File.WriteAllTextAsync(filePath, executionResult.Result);
             }
         }
     }

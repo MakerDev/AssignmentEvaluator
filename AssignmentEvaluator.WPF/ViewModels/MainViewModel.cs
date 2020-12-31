@@ -120,6 +120,24 @@ namespace AssignmentEvaluator.WPF.ViewModels
             ConfigureProblemIdsCommand = new DelegateCommand(ConfigureProblemIds);
         }
 
+        private void StartEvaluation()
+        {
+            _evaluating = true;
+            StartEvaluationCommand.RaiseCanExecuteChanged();
+
+            _dialogService.ShowDialog("EvaluationDialog", null, result =>
+            {
+                _evaluating = false;
+
+                if (result.Result == ButtonResult.OK)
+                {
+                    _regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "EvaluationView");
+                }
+                
+                StartEvaluationCommand.RaiseCanExecuteChanged();
+            });
+        }
+
         private void ConfigureProblemIds()
         {
             if (string.IsNullOrEmpty(LabFolderPath))
@@ -190,30 +208,6 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 || string.IsNullOrEmpty(SavefileName)
                 || string.IsNullOrEmpty(StudentFilePath)
                 || _evaluating);
-        }
-
-        private void StartEvaluation()
-        {
-            _evaluating = true;
-            StartEvaluationCommand.RaiseCanExecuteChanged();
-
-            var p = new DialogParameters();
-            p.Add("EvaluationManager", _evaluationManager);
-
-            _dialogService.ShowDialog("EvaluationDialog", p, result =>
-            {
-                _evaluating = false;
-
-                if (result.Result == ButtonResult.OK)
-                {
-                    _regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "EvaluationView");
-                }
-                else
-                {
-                    //Reset evaluation state
-                    StartEvaluationCommand.RaiseCanExecuteChanged();
-                }
-            });
         }
 
         private void ParseProblemIds()

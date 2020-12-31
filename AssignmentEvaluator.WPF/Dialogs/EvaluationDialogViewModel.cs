@@ -16,6 +16,8 @@ namespace AssignmentEvaluator.WPF.Dialogs
         public DelegateCommand CloseDialogCommand { get; set; }
 
         private int _evaluationProgress = 0;
+        private readonly IEvaluationManager _evaluationManager;
+
         public int EvaluationProgress
         {
             get { return _evaluationProgress; }
@@ -25,8 +27,9 @@ namespace AssignmentEvaluator.WPF.Dialogs
             }
         }
 
-        public EvaluationDialogViewModel()
+        public EvaluationDialogViewModel(IEvaluationManager evaluationManager)
         {
+            _evaluationManager = evaluationManager;
             CloseDialogCommand = new DelegateCommand(() => RequestClose?.Invoke(new DialogResult(ButtonResult.OK)), CanCloseDialog);
         }
 
@@ -42,8 +45,6 @@ namespace AssignmentEvaluator.WPF.Dialogs
 
         public async void OnDialogOpened(IDialogParameters parameters)
         {
-            var evaluationManager = parameters.GetValue<IEvaluationManager>("EvaluationManager");
-
             var progress = new Progress<int>(value =>
             {
                 EvaluationProgress = value;
@@ -55,7 +56,7 @@ namespace AssignmentEvaluator.WPF.Dialogs
                 }
             });
 
-            await evaluationManager.EvaluateAsync(progress);
+            await _evaluationManager.EvaluateAsync(progress);
         }
     }
 }

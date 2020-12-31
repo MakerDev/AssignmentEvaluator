@@ -14,14 +14,17 @@ using System.Threading.Tasks;
 
 namespace AssignmentEvaluator.WPF.ViewModels
 {
-    public class EvaluationViewModel : BindableBase
+    public class EvaluationViewModel : BindableBase, INavigationAware
     {
-        private readonly AssignmentInfo _assignmentInfo;
+        private readonly IEvaluationManager _evaluationManager;
         private readonly IRegionManager _regionManager;
         private readonly IDialogService _dialogService;
+        
+        private AssignmentInfo _assignmentInfo;
 
         public DelegateCommand MoveToNextStudent { get; set; }
         public DelegateCommand MoveToPreviousStudent { get; set; }
+        public DelegateCommand RestartCommand { get; set; }
 
         private int _currentStudentIndex = 0;
         public int CurrentStudentIndex
@@ -34,8 +37,8 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 RaisePropertyChanged(nameof(Student));
                 RaisePropertyChanged(nameof(CurrentStudentNum));
 
-                MoveToNextStudent.RaiseCanExecuteChanged();
-                MoveToPreviousStudent.RaiseCanExecuteChanged();
+                MoveToNextStudent?.RaiseCanExecuteChanged();
+                MoveToPreviousStudent?.RaiseCanExecuteChanged();
 
                 SwitchStudent(Student);
             }
@@ -68,21 +71,23 @@ namespace AssignmentEvaluator.WPF.ViewModels
         public EvaluationViewModel(IEvaluationManager evaluationManager,
             IRegionManager regionManager, IEventAggregator eventAggregator, IDialogService dialogService)
         {
-            _assignmentInfo = evaluationManager.AssignmentInfo;
+            _evaluationManager = evaluationManager;
             _regionManager = regionManager;
             _dialogService = dialogService;
 
-            Students = _assignmentInfo.Students;
-            StudentCount = Students.Count;
+            InitializeContext();
 
             MoveToNextStudent = new DelegateCommand(MoveNext, CanMoveNext);
             MoveToPreviousStudent = new DelegateCommand(MoveBack, CanMoveBack);
 
-            CompletedStudentNum = Students.Where(x => x.IsEvaluationCompleted).Count();
-
             MoveToCommand = new DelegateCommand(()=>
             {
                 MoveToStudent(SearchString);
+            });
+
+            RestartCommand = new DelegateCommand(() =>
+            {
+                regionManager.RequestNavigate(RegionNames.CONTENT_REGION, "MainView");
             });
 
             eventAggregator.GetEvent<StudentEvaluationCompletedEvent>().Subscribe((isCompleted) =>
@@ -104,6 +109,25 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 .ConfigureAwait(true)
                 .GetAwaiter().OnCompleted(() => SwitchStudent(Student));
         }
+
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            InitializeContext();
+
+            ApplicationCommands.ResizeWindow(1400, 900);
+        }
+
+        private void InitializeContext()
+        {
+            _assignmentInfo = _evaluationManager.AssignmentInfo;
+            Students = _assignmentInfo.Students;
+            StudentCount = Students.Count;
+            CompletedStudentNum = Students.Where(x => x.IsEvaluationCompleted).Count();
+
+            CurrentStudentIndex = 0;
+        }
+
 
         private void MoveToStudent(string idOrName)
         {
@@ -164,6 +188,15 @@ namespace AssignmentEvaluator.WPF.ViewModels
             param.Add("Student", student);
 
             _regionManager.RequestNavigate(RegionNames.STUDENT_REGION, "StudentView", param);
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
         }
     }
 }
