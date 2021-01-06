@@ -64,7 +64,7 @@ namespace AssignmentEvaluator.Services
         {
             ClearEvaluationState();
 
-            await CacheInfos();
+            await CacheInfosAsync();
 
             AssignmentInfo.StudentNameIdPairs = _csvManager.LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
 
@@ -130,11 +130,11 @@ namespace AssignmentEvaluator.Services
             return student;
         }
 
-        private async Task CacheInfos()
+        private async Task CacheInfosAsync()
         {
             //Cache CSV file and reset CsvFilePath to the cached file path
             var csvCache = Path.Combine(AssignmentInfo.CacheFolder, "students-cached.csv");
-            File.Move(AssignmentInfo.StudentsCsvFile, csvCache);
+            File.Move(AssignmentInfo.StudentsCsvFile, csvCache, true);
             AssignmentInfo.StudentsCsvFile = csvCache;
 
             await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation"));
