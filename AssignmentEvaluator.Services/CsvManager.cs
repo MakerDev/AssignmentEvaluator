@@ -33,7 +33,16 @@ namespace AssignmentEvaluator.Services
             foreach (var student in assignmentInfo.Students)
             {
                 List<string> contents = new List<string>();
-                contents.Add(student.Name);
+
+                if (student.Name.Contains(","))
+                {
+                    contents.Add($"\"{student.Name}\"");
+                }
+                else
+                {
+                    contents.Add(student.Name);
+                }
+
                 contents.Add(student.Id.ToString());
                 //TODO : Optimize this.
                 contents.Add(student.NormalizeScore(assignmentInfo.EvaluationContexts.Count).ToString());

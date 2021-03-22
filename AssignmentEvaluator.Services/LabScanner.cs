@@ -22,7 +22,7 @@ namespace AssignmentEvaluator.Services
         {
             var splitResults = submissionDir.Name.Split('_');
 
-            string name = splitResults[0];
+            string name = splitResults[0].Split('-')[0];
             int id = _assignmentInfo.StudentNameIdPairs[name];
             bool hasFilenameError = splitResults.Last() != id.ToString();
             SubmissionState submissionState =
