@@ -26,7 +26,6 @@ namespace AssignmentEvaluator.Services
 
             if (!File.Exists(fullpath))
             {
-                File.Create(fullpath);
                 return Task.FromResult<T>(null);
             }
 
