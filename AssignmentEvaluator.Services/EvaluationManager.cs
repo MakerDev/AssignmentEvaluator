@@ -134,8 +134,13 @@ namespace AssignmentEvaluator.Services
         {
             //Cache CSV file and reset CsvFilePath to the cached file path
             var csvCache = Path.Combine(AssignmentInfo.CacheFolder, "students-cached.csv");
-            File.Move(AssignmentInfo.StudentsCsvFile, csvCache, true);
-            AssignmentInfo.StudentsCsvFile = csvCache;
+
+            //같은 파일을 카피하려고 하면 IO exception이 발생
+            if (AssignmentInfo.StudentsCsvFile != csvCache)
+            {
+                File.Copy(AssignmentInfo.StudentsCsvFile, csvCache, true);
+                AssignmentInfo.StudentsCsvFile = csvCache;
+            }
 
             await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation"));
         }
@@ -145,7 +150,7 @@ namespace AssignmentEvaluator.Services
             var studentSumbissionDirs =
                 new DirectoryInfo(Path.Combine(AssignmentInfo.LabFolderPath, "codes"))
                 .GetDirectories()
-                .ToDictionary(d => d.Name.Split('_')[0]);
+                .ToDictionary(d => d.Name.Split('_')[0].Split('-')[0]);
 
             var allStudentNames = AssignmentInfo.StudentNameIdPairs.Keys.ToList();
             var allStudentCount = allStudentNames.Count;
