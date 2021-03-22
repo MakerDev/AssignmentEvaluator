@@ -72,10 +72,10 @@ namespace AssignmentEvaluator.Services
                         feedback += $"p{problem.Id}-{problem.Feedback}  ";
                     }
 
-                    contents.Add(problem.Feedback);
+                    contents.Add($"\"{problem.Feedback}\"");
                 }
 
-                contents.Add(feedback);
+                contents.Add($"\"{feedback}\"");
 
                 builder.AppendLine(string.Join(',', contents.ToArray(), 0, contents.Count));
             }
