@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              Background="White"
              d:DataContext="{d:DesignInstance Type=vm:StudentViewModel, IsDesignTimeCreatable=False}"             
-             prism:ViewModelLocator.AutoWireViewModel="True" Width="1000" Height="850">
+             prism:ViewModelLocator.AutoWireViewModel="True" Width="auto" Height="auto">
     <StackPanel>
         <Border BorderThickness="1"  BorderBrush="Black"/>
 
@@ -35,11 +35,12 @@
 
         <Border BorderThickness="1"  BorderBrush="Black"/>
 
-        <StackPanel Orientation="Horizontal" Margin="0 0 0 20" Width="1000">
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 20" Width="auto">
             <ScrollViewer x:Name="_scrollViewer" 
                           VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Auto"
-                          Height="600">
+                          Width="auto"
+                          Height="800">
                 <ItemsControl ItemsSource="{Binding ProblemDetails}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>

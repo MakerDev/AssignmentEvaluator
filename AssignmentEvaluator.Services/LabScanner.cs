@@ -42,6 +42,8 @@ namespace AssignmentEvaluator.Services
                 problems.Add(problem);
             }
 
+            problems = problems.OrderBy(x => x.Id).ToList();
+
             var student = new Student
             {
                 Id = id,

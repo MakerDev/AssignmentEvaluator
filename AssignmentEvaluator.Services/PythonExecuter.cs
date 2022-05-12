@@ -29,7 +29,7 @@ namespace AssignmentEvaluator.Services
             {
                 FileName = @"python.exe",
                 Arguments = $"\"{pythonFile.FullName}\"",
-
+                WorkingDirectory = @"C:\Test\2021-2.5\lab10",
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -37,7 +37,7 @@ namespace AssignmentEvaluator.Services
                 RedirectStandardError = true,
             };
 
-            Process process = new Process
+            Process process = new()
             {
                 StartInfo = psi,
                 EnableRaisingEvents = true

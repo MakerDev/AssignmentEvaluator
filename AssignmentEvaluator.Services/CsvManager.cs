@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -123,6 +124,8 @@ namespace AssignmentEvaluator.Services
                     studentNameIdPairs.Add(record.Name, record.Id);
                 }
             }
+
+            studentNameIdPairs = studentNameIdPairs.OrderBy(x=>x.Key).ToDictionary(x => x.Key, x => x.Value);
 
             return studentNameIdPairs;
         }

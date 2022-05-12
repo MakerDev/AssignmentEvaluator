@@ -183,6 +183,13 @@ namespace AssignmentEvaluator.Services
                     return s1.Id - s2.Id;
                 });
             }
+            else
+            {
+                AssignmentInfo.Students.Sort((s1, s2) =>
+                {
+                    return string.Compare(s1.Name, s2.Name);
+                });
+            }
         }
 
         private Student GetNotSubmittedStudent(string name, int id)
@@ -227,12 +234,12 @@ namespace AssignmentEvaluator.Services
         private async Task CreateEvaluationContextsAsync()
         {
             var filesInsideAnswerFolder = new DirectoryInfo(Path.Combine(AssignmentInfo.LabFolderPath, "answers")).GetFiles();
-            var pythonFiles = filesInsideAnswerFolder.Where(f => f.Extension == ".py").ToList();
+            var pythonFiles = filesInsideAnswerFolder.Where(f => f.Extension == ".py").OrderBy(x=>x.Name).ToList();
 
-            for (int i = 0; i < AssignmentInfo.ProblemIds.Count; i++)
+            foreach (var pythonFile in pythonFiles)
             {
-                var pythonFile = pythonFiles[i];
-                var pythonFileNameWithoutExtension = pythonFile.Name.Substring(0, 2);
+                var pythonFileNameWithoutExtension = pythonFile.Name.Split('.')[0];
+                var problemId = int.Parse(pythonFileNameWithoutExtension[1..]);
 
                 var testCaseInputs = filesInsideAnswerFolder.Where(x => x.Name.Contains(pythonFileNameWithoutExtension + "_in"))
                                                             .Select(x => File.ReadAllText(x.FullName))
@@ -248,9 +255,9 @@ namespace AssignmentEvaluator.Services
                     bannedKeywords = (await File.ReadAllTextAsync(bannedKeywordFile.FullName)).Split('\n').ToList();
                 }
 
-                EvaluationContext evaluationContext = new EvaluationContext
+                EvaluationContext evaluationContext = new()
                 {
-                    ProblemId = AssignmentInfo.ProblemIds[i],
+                    ProblemId = problemId,
                     TestCaseInputs = testCaseInputs,
                     AnswerCode = await File.ReadAllTextAsync(pythonFile.FullName),
                     BannedKeywords = bannedKeywords,
@@ -265,7 +272,7 @@ namespace AssignmentEvaluator.Services
                     await ReadAnswersFromExistingFiles(pythonFile, pythonFileNameWithoutExtension, testCaseInputs, evaluationContext);
                 }
 
-                AssignmentInfo.EvaluationContexts.Add(AssignmentInfo.ProblemIds[i], evaluationContext);
+                AssignmentInfo.EvaluationContexts.Add(problemId, evaluationContext);
             }
         }
 

@@ -225,6 +225,8 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
                 _assignmentInfo.ProblemIds.Add(int.Parse(problemId));
             }
+
+            _assignmentInfo.ProblemIds.Sort();
         }
     }
 }

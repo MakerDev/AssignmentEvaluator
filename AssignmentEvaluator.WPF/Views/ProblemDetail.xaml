@@ -11,7 +11,7 @@
              Background="White"
              d:DataContext="{d:DesignInstance Type=viewmodels:ProblemDetailViewModel}">
     
-    <StackPanel Width="800" Margin="0 5">
+    <StackPanel Width="auto" Margin="0 5">
         <StackPanel Orientation="Horizontal" >
             <TextBlock Text="{Binding Context.ProblemId, StringFormat=P{0}}" Width="50" Height="35" />
             <TextBlock Text="{Binding Problem.Score, StringFormat=점수 : {0}/}" Height="35" />
