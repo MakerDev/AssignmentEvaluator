@@ -93,6 +93,8 @@ namespace AssignmentEvaluator.Services
                 "Name", "Id", "Score"
             };
 
+            evaluationContexts = evaluationContexts.OrderBy(x=>x.ProblemId).ToList();
+
             foreach (var context in evaluationContexts)
             {
                 headers.Add($"p{context.ProblemId}-score");

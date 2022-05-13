@@ -84,6 +84,11 @@ namespace AssignmentEvaluator.Services
                 //This overrides existing evaluationContext.
                 AssignmentInfo = assignmentInfoFromSavefile;
                 AssignmentInfo.EvaluationContexts = evaluationContext;
+                foreach (var student in AssignmentInfo.Students)
+                {
+                    student.Problems = student.Problems.OrderBy(x => x.Id).ToList();
+                }
+                //Sort all infos
                 progress.Report(100);
             }
         }
