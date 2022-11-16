@@ -94,10 +94,6 @@ namespace AssignmentEvaluator.WPF.ViewModels
             {
                 if (isCompleted)
                 {
-                    CompletedStudentNum++;
-                }
-                else
-                {
                     CompletedStudentNum--;
                 }
 

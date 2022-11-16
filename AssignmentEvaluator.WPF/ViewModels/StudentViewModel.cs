@@ -80,6 +80,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
             ReevaluateCommand = new DelegateCommand(async () =>
             {
+                var was_completed = Student.IsEvaluationCompleted;
                 var student = await evaluationManager.ReevaluateStudent(Student.Name);
 
                 if (student != null)
@@ -88,7 +89,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 }
 
                 //Reset evaluation state to false again.
-                eventAggregator.GetEvent<StudentEvaluationCompletedEvent>().Publish(false);
+                eventAggregator.GetEvent<StudentEvaluationCompletedEvent>().Publish(was_completed);
             });
 
             CompleteEvaluationCommand = new DelegateCommand(() =>
