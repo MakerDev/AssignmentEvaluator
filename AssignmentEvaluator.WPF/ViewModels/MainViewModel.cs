@@ -5,6 +5,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -146,15 +147,17 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
             var answersDirectory = new DirectoryInfo(Path.Combine(LabFolderPath, "answers"));
             var pythonFiles = answersDirectory.GetFiles().Where(x => x.Extension == ".py").ToList();
-            string problemIds = "";
+            List<int> problemIds = new List<int>();
 
             foreach (var pythonFile in pythonFiles)
             {
-                var id = Regex.Match(pythonFile.Name, @"\d+").Value;
-                problemIds += $"{id} ";
+                var id = int.Parse(Regex.Match(pythonFile.Name, @"\d+").Value);
+                problemIds.Add(id);
             }
 
-            ProblemNumbers = problemIds;
+            problemIds.Sort();
+
+            ProblemNumbers = string.Join(' ', problemIds);
         }
 
         private async void LoadLastAssignmentInfo()
