@@ -43,10 +43,10 @@ namespace AssignmentEvaluator.Models
 
                 double normalizedScore = Score / TestCases.Count;
 
-                if (normalizedScore < 1)
-                {
-                    normalizedScore = 1;
-                }
+                //if (normalizedScore < 1)
+                //{
+                //    normalizedScore = 1;
+                //}
 
                 return normalizedScore + AdditionalScore;
             }

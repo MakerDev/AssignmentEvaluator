@@ -115,17 +115,10 @@ namespace AssignmentEvaluator.Services
             {
                 isPassed = false;
                 comment = "실행 중 오류" + " : " + executionResult.Errors;
-
-                problem.Feedback += $"Case{caseId} 실행 중 오류";
             }
             else
             {
                 isPassed = CheckIfPassed(executionResult.Result, context, caseId, out comment);
-
-                if (isPassed == false)
-                {
-                    problem.Feedback += $"Case{caseId} {comment}";
-                }
             }
 
             var testCase = new TestCase

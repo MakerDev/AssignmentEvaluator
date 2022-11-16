@@ -45,7 +45,7 @@ namespace AssignmentEvaluator.Models
         /// </summary>
         /// <param name="The number of problems"></param>
         /// <returns>Normalized score</returns>
-        public double NormalizeScore(int problemCount, int normalizationScore=20)
+        public double NormalizeScore(int problemCount, int normalizationScore=3)
         {
             return normalizationScore * Score / (problemCount*3);
         }
