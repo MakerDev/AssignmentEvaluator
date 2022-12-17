@@ -40,12 +40,12 @@ namespace AssignmentEvaluator.Services
                 return null;
             }
 
-            return await _jsonManager.LoadAsync<AssignmentInfo>(path, false);
+            return await JsonManager.LoadAsync<AssignmentInfo>(path, false);
         }
 
         public async Task SaveAsJsonAsync()
         {
-            await _jsonManager.SaveAsync(AssignmentInfo, AssignmentInfo.SaveFilePath, false);
+            await JsonManager.SaveAsync(AssignmentInfo, AssignmentInfo.SaveFilePath, false);
         }
 
         public async Task ExportCsvAsync()
@@ -70,7 +70,7 @@ namespace AssignmentEvaluator.Services
 
             await CreateEvaluationContextsAsync();
 
-            var assignmentInfoFromSavefile = await _jsonManager.LoadAsync<AssignmentInfo>(AssignmentInfo.SaveFilePath, false);
+            var assignmentInfoFromSavefile = await JsonManager.LoadAsync<AssignmentInfo>(AssignmentInfo.SaveFilePath, false);
 
             if (assignmentInfoFromSavefile == null)
             {
@@ -147,7 +147,7 @@ namespace AssignmentEvaluator.Services
                 AssignmentInfo.StudentsCsvFile = csvCache;
             }
 
-            await _jsonManager.SaveAsync(AssignmentInfo, Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation"));
+            await JsonManager.SaveAsync(AssignmentInfo, Path.Combine(AssignmentInfo.CacheFolder, "lastEvaluation"));
         }
 
         private async Task EvaluateInternalAsync(IProgress<int> progress = null)
@@ -209,6 +209,7 @@ namespace AssignmentEvaluator.Services
                     {
                         Id = context.ProblemId,
                         Submitted = false,
+                        MaxScore = context.MaxScore,
                         Feedback = "미제출",
                     };
 
@@ -241,8 +242,9 @@ namespace AssignmentEvaluator.Services
             var filesInsideAnswerFolder = new DirectoryInfo(Path.Combine(AssignmentInfo.LabFolderPath, "answers")).GetFiles();
             var pythonFiles = filesInsideAnswerFolder.Where(f => f.Extension == ".py").OrderBy(x=>x.Name).ToList();
 
-            foreach (var pythonFile in pythonFiles)
+            for (int i = 0; i < pythonFiles.Count; i++)
             {
+                var pythonFile = pythonFiles[i];
                 var pythonFileNameWithoutExtension = pythonFile.Name.Split('.')[0];
                 var problemId = int.Parse(pythonFileNameWithoutExtension[1..]);
 
@@ -263,6 +265,7 @@ namespace AssignmentEvaluator.Services
                 EvaluationContext evaluationContext = new()
                 {
                     ProblemId = problemId,
+                    MaxScore = AssignmentInfo.ProblemScores[i],
                     TestCaseInputs = testCaseInputs,
                     AnswerCode = await File.ReadAllTextAsync(pythonFile.FullName),
                     BannedKeywords = bannedKeywords,

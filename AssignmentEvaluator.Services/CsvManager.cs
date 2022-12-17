@@ -24,13 +24,6 @@ namespace AssignmentEvaluator.Services
 
             builder.AppendLine(CreateHeader(assignmentInfo.EvaluationContexts.Values));
 
-            double maxScore = 0;
-
-            foreach (var context in assignmentInfo.EvaluationContexts.Values)
-            {
-                maxScore += context.MaxScore;
-            }
-
             foreach (var student in assignmentInfo.Students)
             {
                 List<string> contents = new List<string>();
@@ -46,7 +39,7 @@ namespace AssignmentEvaluator.Services
 
                 contents.Add(student.Id.ToString());
                 //TODO : Optimize this.
-                contents.Add(student.NormalizeScore(assignmentInfo.EvaluationContexts.Count).ToString());
+                contents.Add(student.Score.ToString());
 
                 string feedback = "";
 

@@ -10,18 +10,19 @@ namespace AssignmentEvaluator.Models
         public bool HasNameError { get; set; } = false;
         public string Code { get; set; } = "";
         public double AdditionalScore { get; set; } = 0;
+        public double MaxScore { get; set; } = 3.0;
 
-        public int Score
+        public double Score
         {
             get
             {
-                int score = 0;
+                double score = 0;
 
                 foreach (var testCase in TestCases)
                 {
                     if (testCase.IsPassed)
                     {
-                        score += 3;
+                        score += MaxScore/TestCases.Count;
                     }
                 }
 
@@ -41,14 +42,7 @@ namespace AssignmentEvaluator.Models
                     return 0;
                 }
 
-                double normalizedScore = Score / TestCases.Count;
-
-                //if (normalizedScore < 1)
-                //{
-                //    normalizedScore = 1;
-                //}
-
-                return normalizedScore + AdditionalScore;
+                return Score + AdditionalScore;
             }
         }
 

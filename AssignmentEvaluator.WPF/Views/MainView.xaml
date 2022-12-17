@@ -50,9 +50,16 @@
                 Command="{Binding LoadLastAssignmentInfoCommand}"/>
         
         <!--Row 2-->
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0 15 0 0">
-            <TextBlock Text="문제 번호들" Margin="0,0,30, 0" Width="150"/>
-            <TextBox Text="{Binding ProblemNumbers}"  MinWidth="250" MinHeight="30" />
+        <StackPanel Grid.Row="2" Grid.Column="1">
+            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
+                <TextBlock Text="문제 번호들" Margin="0,0,30, 0" Width="150"/>
+                <TextBox Text="{Binding ProblemNumbers}"  MinWidth="250" MinHeight="30" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 15 0 0">
+                <TextBlock Text="문제별 배점" Margin="0 0 30 0" Width="150"/>
+                <TextBox Text="{Binding ProblemScores}"  MinWidth="250" MinHeight="30" />
+            </StackPanel>
         </StackPanel>
 
         <Button Content="번호 자동 추정" 

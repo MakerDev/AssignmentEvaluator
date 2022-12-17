@@ -6,7 +6,7 @@ namespace AssignmentEvaluator.Services
 {
     public class JsonManager
     {
-        public Task<bool> DeleteIfExistsAsync(string fullpath, bool appendExtenstion = true)
+        public static Task<bool> DeleteIfExistsAsync(string fullpath, bool appendExtenstion = true)
         {
             if (appendExtenstion)
                 fullpath += ".json";
@@ -19,7 +19,7 @@ namespace AssignmentEvaluator.Services
             return Task.FromResult(false);
         }
 
-        public Task<T> LoadAsync<T>(string fullpath, bool appendExtenstion = true) where T : class, new()
+        public static Task<T> LoadAsync<T>(string fullpath, bool appendExtenstion = true) where T : class, new()
         {
             if (appendExtenstion)
                 fullpath += ".json";
@@ -35,7 +35,7 @@ namespace AssignmentEvaluator.Services
             return Task.FromResult(instance);
         }
 
-        public Task SaveAsync<T>(T instance, string fullpath, bool appendExtenstion = true) where T : class
+        public static Task SaveAsync<T>(T instance, string fullpath, bool appendExtenstion = true) where T : class
         {
             if (appendExtenstion)
                 fullpath += ".json";

@@ -31,10 +31,11 @@ namespace AssignmentEvaluator.Models
         public Dictionary<string, int> StudentNameIdPairs { get; set; } = new Dictionary<string, int>();
 
         public List<int> ProblemIds { get; set; } = new List<int>();
+        public List<int> ProblemScores { get; set; } = new List<int>();
 
         /// <summary>
         /// Key : problem Id
-        /// </summary>        
+        /// </summary>
         [JsonIgnore]
         public Dictionary<int, EvaluationContext> EvaluationContexts { get; set; }
             = new Dictionary<int, EvaluationContext>();

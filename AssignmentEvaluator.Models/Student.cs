@@ -39,15 +39,5 @@ namespace AssignmentEvaluator.Models
                 return SubmissionState == SubmissionState.Late ? total/2 : total;
             }
         }
-
-        /// <summary>
-        /// Normalize to max of 2
-        /// </summary>
-        /// <param name="The number of problems"></param>
-        /// <returns>Normalized score</returns>
-        public double NormalizeScore(int problemCount, int normalizationScore=3)
-        {
-            return normalizationScore * Score / (problemCount*3);
-        }
     }
 }

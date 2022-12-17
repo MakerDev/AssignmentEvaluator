@@ -73,6 +73,7 @@ namespace AssignmentEvaluator.Services
                     Id = problemId,
                     Submitted = false,
                     Code = "",
+                    MaxScore = _assignmentInfo.ProblemScores[problemId-1],
                     Feedback = "미제출",
                     HasNameError = true
                 };
@@ -83,6 +84,7 @@ namespace AssignmentEvaluator.Services
             {
                 Id = problemId,
                 Submitted = true,
+                MaxScore = _assignmentInfo.ProblemScores[problemId-1],
                 Code = File.ReadAllText(pythonFile.FullName),
                 HasNameError = pythonFile.Name != $"p{problemId}.py"
             };
@@ -91,7 +93,7 @@ namespace AssignmentEvaluator.Services
 
             for (int i = 0; i < context.TestCaseInputs.Count; i++)
             {
-                var testCase = await EvaluateTestCase(problemId, pythonFile, problem, context, i);
+                var testCase = await EvaluateTestCase(problemId, pythonFile, context, i);
 
                 problem.TestCases.Add(testCase);
             }
@@ -101,7 +103,6 @@ namespace AssignmentEvaluator.Services
 
         private async Task<TestCase> EvaluateTestCase(int problemId,
                                                       FileInfo pythonFile,
-                                                      Problem problem,
                                                       EvaluationContext context,
                                                       int caseId)
         {

@@ -56,6 +56,18 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
         }
 
+        private string _problemScores;
+        public string ProblemScores
+        {
+            get { return _problemScores; }
+            set
+            {
+                SetProperty(ref _problemScores, value);
+                ParseProblemScores();
+                StartEvaluationCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         private string _savefileName;
         public string SavefileName
         {
@@ -173,6 +185,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
             SavefileName = info.SavefileName;
             StudentFilePath = info.StudentsCsvFile;
             ProblemNumbers = string.Join(' ', info.ProblemIds);
+            ProblemScores = string.Join(' ', info.ProblemScores);
 
             RaisePropertyChanged(nameof(SortById));
             RaisePropertyChanged(nameof(CompareAnswers));
@@ -210,6 +223,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
                 || string.IsNullOrEmpty(ProblemNumbers)
                 || string.IsNullOrEmpty(SavefileName)
                 || string.IsNullOrEmpty(StudentFilePath)
+                || string.IsNullOrEmpty(ProblemNumbers)
                 || _evaluating);
         }
 
@@ -230,6 +244,23 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
 
             _assignmentInfo.ProblemIds.Sort();
+        }
+
+        private void ParseProblemScores()
+        {
+            var problemScores = ProblemScores.Split(" ");
+               
+            _assignmentInfo.ProblemScores.Clear();
+
+            foreach (var problemScore in problemScores)
+            {
+                if (string.IsNullOrWhiteSpace(problemScore))
+                {
+                    continue;
+                }
+
+                _assignmentInfo.ProblemScores.Add(int.Parse(problemScore));
+            }
         }
     }
 }

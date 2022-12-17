@@ -16,7 +16,7 @@
             <TextBlock Text="{Binding Context.ProblemId, StringFormat=P{0}}" Width="50" Height="35" />
             <TextBlock Text="{Binding Problem.Score, StringFormat=점수 : {0}/}" Height="35" />
             <TextBlock Text="{Binding Context.MaxScore}"  Height="35"/>
-            <TextBlock Text="{Binding Problem.NormalizedScore, StringFormat=표준점수 : {0}/3.0}" 
+            <TextBlock Text="{Binding Problem.NormalizedScore, StringFormat=조정점수: {0}}" 
                        Height="35"
                        Margin="10 0"/>
             <TextBlock Margin="5 0" Text="Additional Score" Height="35" />
