@@ -14,21 +14,15 @@ namespace AssignmentEvaluator.Services
 {
     public class EvaluationManager : IEvaluationManager
     {
-        private readonly PythonExecuter _pythonExecuter;
         private readonly LabScanner _labScanner;
-        private readonly JsonManager _jsonManager;
-        private readonly CsvManager _csvManager;
 
         private List<Problem> _cachedProeblems = null;
 
         public AssignmentInfo AssignmentInfo { get; set; } = new AssignmentInfo();
 
-        public EvaluationManager(PythonExecuter pythonExecuter, JsonManager jsonManager, CsvManager csvManager)
+        public EvaluationManager()
         {
-            _pythonExecuter = pythonExecuter;
-            _labScanner = new LabScanner(AssignmentInfo, pythonExecuter);
-            _jsonManager = jsonManager;
-            _csvManager = csvManager;
+            _labScanner = new LabScanner(AssignmentInfo);
         }
 
         public async Task<AssignmentInfo> LoadLastAssignmentInfo()
@@ -50,7 +44,7 @@ namespace AssignmentEvaluator.Services
 
         public async Task ExportCsvAsync()
         {
-            await _csvManager.ExportCsvAsync(AssignmentInfo);
+            await CsvManager.ExportCsvAsync(AssignmentInfo);
         }
 
         public void ClearEvaluationState()
@@ -66,7 +60,7 @@ namespace AssignmentEvaluator.Services
 
             await CacheInfosAsync();
 
-            AssignmentInfo.StudentNameIdPairs = _csvManager.LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
+            AssignmentInfo.StudentNameIdPairs = CsvManager.LoadStudentInfosFromCsv(AssignmentInfo.StudentsCsvFile);
 
             await CreateEvaluationContextsAsync();
 
@@ -160,7 +154,7 @@ namespace AssignmentEvaluator.Services
             var allStudentNames = AssignmentInfo.StudentNameIdPairs.Keys.ToList();
             var allStudentCount = allStudentNames.Count;
 
-            List<Task<Student>> studentTasks = new List<Task<Student>>();
+            List<Task<Student>> studentTasks = new();
             int doneCount = 0;
             foreach (var name in allStudentNames)
             {
@@ -205,7 +199,7 @@ namespace AssignmentEvaluator.Services
 
                 foreach (var context in AssignmentInfo.EvaluationContexts.Values)
                 {
-                    Problem problem = new Problem
+                    Problem problem = new()
                     {
                         Id = context.ProblemId,
                         Submitted = false,
@@ -226,7 +220,7 @@ namespace AssignmentEvaluator.Services
                 }
             }
 
-            Student student = new Student
+            Student student = new()
             {
                 Name = name,
                 Id = id,
@@ -306,7 +300,7 @@ namespace AssignmentEvaluator.Services
             }
         }
 
-        private async Task GenerateAnswerFiles(FileInfo pythonFile,
+        private static async Task GenerateAnswerFiles(FileInfo pythonFile,
                                                string pythonFileNameWithoutExtension,
                                                List<string> testCaseInputs,
                                                EvaluationContext evaluationContext)
@@ -314,7 +308,7 @@ namespace AssignmentEvaluator.Services
             for (int j = 0; j < testCaseInputs.Count; j++)
             {
                 string testCaseInput = testCaseInputs[j];
-                var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
+                var executionResult = await PythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
 
                 evaluationContext.TestCaseResults.Add(executionResult.Result);
 

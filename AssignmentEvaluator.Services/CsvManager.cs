@@ -18,17 +18,17 @@ namespace AssignmentEvaluator.Services
 
     public class CsvManager
     {
-        public async Task ExportCsvAsync(AssignmentInfo assignmentInfo)
+        public static async Task ExportCsvAsync(AssignmentInfo assignmentInfo)
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
 
             builder.AppendLine(CreateHeader(assignmentInfo.EvaluationContexts.Values));
 
             foreach (var student in assignmentInfo.Students)
             {
-                List<string> contents = new List<string>();
+                List<string> contents = new();
 
-                if (student.Name.Contains(","))
+                if (student.Name.Contains(','))
                 {
                     contents.Add($"\"{student.Name}\"");
                 }
@@ -79,9 +79,9 @@ namespace AssignmentEvaluator.Services
             await File.WriteAllTextAsync(csvPath, builder.ToString());
         }
 
-        private string CreateHeader(IEnumerable<EvaluationContext> evaluationContexts)
+        private static string CreateHeader(IEnumerable<EvaluationContext> evaluationContexts)
         {
-            List<string> headers = new List<string>
+            List<string> headers = new()
             {
                 "Name", "Id", "Score"
             };
@@ -105,7 +105,7 @@ namespace AssignmentEvaluator.Services
             return string.Join(',', headers.ToArray(), 0, headers.Count);
         }
 
-        public Dictionary<string, int> LoadStudentInfosFromCsv(string filePath)
+        public static Dictionary<string, int> LoadStudentInfosFromCsv(string filePath)
         {
             var studentNameIdPairs = new Dictionary<string, int>();
 

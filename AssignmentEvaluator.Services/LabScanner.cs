@@ -9,13 +9,11 @@ namespace AssignmentEvaluator.Services
     public class LabScanner
     {
         private readonly AssignmentInfo _assignmentInfo;
-        private readonly PythonExecuter _pythonExecuter;
 
         //TODO : Refactor this class
-        public LabScanner(AssignmentInfo assignmentInfo, PythonExecuter pythonExecuter)
+        public LabScanner(AssignmentInfo assignmentInfo)
         {
             _assignmentInfo = assignmentInfo;
-            _pythonExecuter = pythonExecuter;
         }
 
         public async Task<Student> GenerateStudentAsync(DirectoryInfo submissionDir)
@@ -101,13 +99,13 @@ namespace AssignmentEvaluator.Services
             return problem;
         }
 
-        private async Task<TestCase> EvaluateTestCase(int problemId,
+        private static async Task<TestCase> EvaluateTestCase(int problemId,
                                                       FileInfo pythonFile,
                                                       EvaluationContext context,
                                                       int caseId)
         {
             string testCaseInput = context.TestCaseInputs[caseId];
-            var executionResult = await _pythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
+            var executionResult = await PythonExecuter.ExecuteAsync(pythonFile, testCaseInput);
 
             string comment;
             bool isPassed;
@@ -134,7 +132,7 @@ namespace AssignmentEvaluator.Services
             return testCase;
         }
 
-        private bool CheckIfPassed(string result, EvaluationContext context, int caseNumber, out string comment)
+        private static bool CheckIfPassed(string result, EvaluationContext context, int caseNumber, out string comment)
         {
             comment = "";
 

@@ -12,7 +12,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
 {
     public class StudentViewModel : BindableBase, INavigationAware
     {
-        private Student _student = new Student();
+        private Student _student = new();
         public Student Student
         {
             get { return _student; }

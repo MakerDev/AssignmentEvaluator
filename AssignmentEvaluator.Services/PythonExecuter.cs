@@ -22,7 +22,7 @@ namespace AssignmentEvaluator.Services
         /// <param name="pythonFile"></param>
         /// <param name="inputContent"></param>
         /// <returns>Execution Result</returns>
-        public async Task<PythonExecutionResult> ExecuteAsync(FileInfo pythonFile, string inputContent = "\n")
+        public static async Task<PythonExecutionResult> ExecuteAsync(FileInfo pythonFile, string inputContent = "\n")
         {
             //TODO : 지금 한 명 당 파이썬 프로세스 하나라 무거운가..? 풀링 사용하기..?
             var psi = new ProcessStartInfo
@@ -80,10 +80,9 @@ namespace AssignmentEvaluator.Services
 
             var result = new PythonExecutionResult
             {
-                HadError = hadErrors
+                HadError = hadErrors,
+                Result = process.StandardOutput.ReadToEnd()
             };
-
-            result.Result = process.StandardOutput.ReadToEnd();
 
             if (hadErrors)
             {

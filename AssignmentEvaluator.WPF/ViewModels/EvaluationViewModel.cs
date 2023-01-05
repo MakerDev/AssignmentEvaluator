@@ -150,8 +150,10 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
             if (newIndex == -1)
             {
-                var p = new DialogParameters();
-                p.Add("Message", $"Couldn't find student {idOrName}");
+                var p = new DialogParameters
+                {
+                    { "Message", $"Couldn't find student {idOrName}" }
+                };
                 _dialogService.ShowDialog("MessageDisplayDialog", p, null);
                 return;
             }
@@ -184,8 +186,10 @@ namespace AssignmentEvaluator.WPF.ViewModels
             //INFO : Move this if there is a more proper place.
             ApplicationCommands.CloseAllExpanders.RegisteredCommands.Clear();
 
-            var param = new NavigationParameters();
-            param.Add("Student", student);
+            var param = new NavigationParameters
+            {
+                { "Student", student }
+            };
 
             _regionManager.RequestNavigate(RegionNames.STUDENT_REGION, "StudentView", param);
         }

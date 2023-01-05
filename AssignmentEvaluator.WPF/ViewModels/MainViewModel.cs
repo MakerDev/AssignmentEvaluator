@@ -159,7 +159,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
             }
             var answersDirectory = new DirectoryInfo(Path.Combine(LabFolderPath, "answers"));
             var pythonFiles = answersDirectory.GetFiles().Where(x => x.Extension == ".py").ToList();
-            List<int> problemIds = new List<int>();
+            List<int> problemIds = new();
 
             foreach (var pythonFile in pythonFiles)
             {
@@ -202,7 +202,7 @@ namespace AssignmentEvaluator.WPF.ViewModels
 
         private void SelectStudentListFile()
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
+            OpenFileDialog fileDialog = new();
             fileDialog.ShowDialog();
 
             StudentFilePath = fileDialog.FileName;
