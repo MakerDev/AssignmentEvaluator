@@ -116,6 +116,7 @@ namespace AssignmentEvaluator.Services
 
                 foreach (var record in records)
                 {
+                    //TODO: Add "(1)" to name if there is same name.
                     studentNameIdPairs.Add(record.Name, record.Id);
                 }
             }

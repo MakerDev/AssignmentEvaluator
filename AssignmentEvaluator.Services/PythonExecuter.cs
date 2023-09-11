@@ -29,7 +29,7 @@ namespace AssignmentEvaluator.Services
             {
                 FileName = @"python.exe",
                 Arguments = $"\"{pythonFile.FullName}\"",
-                WorkingDirectory = @"C:\Test\2021-2.5\lab10",
+                WorkingDirectory = @"C:\Test\2023-1",
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -45,7 +45,7 @@ namespace AssignmentEvaluator.Services
 
             bool infiteLoop = false;
 
-            await Task.Run(() =>
+            await Task.Run(() => 
             {
                 process.Start();
 
@@ -57,7 +57,7 @@ namespace AssignmentEvaluator.Services
 
                 if (!process.WaitForExit(TIMEOUT_MILLISEC))
                 {
-                    process.Kill();
+                    process.Kill(true);
                     infiteLoop = true;
                 }
             });
